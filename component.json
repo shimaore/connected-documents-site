@@ -2,10 +2,21 @@
   "dependencies": {
     "component/router": "~0.0.1",
     "component/dom": "^1.0.5",
-    "manuelstofer/pflock": "~0.6.0"
+    "shimaore/pflock": "master",
+    "visionmedia/superagent": "~0.17.0"
   },
-  "scripts": ["build/main.js","build/db.js","build/views.js"],
-  "paths": ["components","vendor"],
-  "locals": ["pouchdb","teacup"],
+  "scripts": [
+    "build/main.js",
+    "build/db.js",
+    "build/views.js"
+  ],
+  "paths": [
+    "components",
+    "vendor"
+  ],
+  "locals": [
+    "pouchdb",
+    "teacup"
+  ],
   "private": true
 }

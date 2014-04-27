@@ -1,4 +1,5 @@
     $ = require 'dom'
+    request = require 'superagent'
 
 We do not support offline yet.
 
@@ -11,30 +12,36 @@ Create context for views.
     views = require './views'
 
     in_context = (cb) ->
+      base = "#{window.location.protocol}//#{window.location.host}"
+      console.log "Using base = #{base}"
       the =
-        shareddb: new DB if offline? then 'shared' else '/shared'
+        shareddb: new DB if offline then 'shared' else "#{base}/shared"
         private_submit: (data,cb) ->
-          request.post '/_app/private_submit', data, (err,res) ->
-            if err? or not res.ok
-              cb false
-            else
-              cb true
+          request
+          .post '/_app/private_submit'
+          .send data
+          .timeout 1000
+          .end (res) ->
+            cb res.ok
 
-      the.shareddb.get 'store'
+      the.shareddb.pouch.get 'store'
       .then (doc) ->
         the.store = doc
+        the.user = {}
 
-        if not user_id?
+        if not offline and not user_id?
           cb the
 
-        the.userdb = new DB if offline? then 'user' else "/#{user_id}"
-        the.userdb.get 'profile'
+        the.userdb = new DB if offline then 'user' else "#{base}/user-#{user_id}"
+        the.userdb.pouch.get 'profile'
         .then (doc) ->
           the.user = doc
-
           cb the
-      .catch (err) ->
-        console.log err
+        .catch (error) ->
+          console.log user_profile:error
+
+      .catch (error) ->
+        console.log store:error
         # FIXME Notify user? Retry?
 
 Append a view to the specific (component-dom) widget.
@@ -44,7 +51,8 @@ Append a view to the specific (component-dom) widget.
         the.widget = $ '<div/>'
         base_widget.append the.widget
 
-        views[view_name] the
+        console.log "Loading view #{view_name}"
+        views[view_name]? the
 
 Application routing.
 
@@ -67,6 +75,8 @@ Hash-tag based routing
         base = $ 'body'
 
         # Top menu: profile, logout
+        append_view base, 'welcome_text'
+        append_view base, 'twitter_feeds'
 
         # Top content: questions (feedback)
         # List all current questions found in shared database, hide questions user already answered,
@@ -98,6 +108,33 @@ Hash-tag based routing
 
       @get '/login', ->
         # Login with email/password, facebook connect, or twitter connect
+
+        ## For now use CouchDB session; later we'll use our own authenticating proxy.
+        request
+        .get '/_session'
+        .accept 'json'
+        .end (res) ->
+          if not res.ok
+            return console.log "Session failed" # FIXME
+          if res.body.userCtx.name?
+            user_name = res.body.userCtx.name
+
+          if not user_name
+            return console.log "No username" # FIXME
+          else
+            console.log "Username = #{user_name}"
+
+          request
+          .get "/_users/org.couchdb.user:#{user_name}"
+          .accept 'json'
+          .end (res) ->
+            if not res.ok
+              return console.log "No user info" # FIXME
+            # FIXME check for `created`
+            # FIXME check for `validated`
+            if res.body.user_uuid?
+              user_id = res.body.user_uuid
+              router.dispatch '/home'
 
         # Registration
 

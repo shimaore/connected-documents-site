@@ -6,7 +6,7 @@ Type: `user`
 
 As per CouchDB spec, with additions:
 
-    created: true iff initial account creation is successful (useddb exists, etc.)
+    created: true iff initial account creation is successful (userdb exists, etc.)
     validated: true iff email address has been validated
 
 Db: 'public'
@@ -82,8 +82,8 @@ Questions; the answers are stored in the private DB.
     keep_anonymous: 
     answer_type: either 'boolean', 'string' (free form), or an array of possible answers
 
-Db: userdb
-==========
+Db: "user-#{user_uuid}"
+=======================
 
 Type: `store`
 -------------
