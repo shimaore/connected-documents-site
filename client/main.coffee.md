@@ -16,6 +16,13 @@ Create context for views.
       console.log "Using base = #{base}"
       the =
         shareddb: new DB if offline then 'shared' else "#{base}/shared"
+        shared_submit: (data,cb) ->
+          request
+          .post '/_app/shared_submit'
+          .send data
+          .timeout 1000
+          .end (res) ->
+            cb res.ok
         private_submit: (data,cb) ->
           request
           .post '/_app/private_submit'

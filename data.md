@@ -6,6 +6,8 @@ Type: `user`
 
 As per CouchDB spec, with additions:
 
+    user_uuid   User's UUID, used e.g. to build user database name.
+
     created: true iff initial account creation is successful (userdb exists, etc.)
     validated: true iff email address has been validated
 
@@ -18,6 +20,8 @@ Accessible publicly without authentication.
 
 Db: 'shared'
 ============
+
+Accessible to registered users.
 
 Security:
 
@@ -51,6 +55,7 @@ Type: `content`
 ---------------
 
 Some publishable or published content. (Content might be purchased or made available for free.)
+In the 'shared' database, only metadata of paid-for content is available.
 
     type: 'content'
     _id: `content:` + uuid
@@ -68,6 +73,8 @@ Attachments:
 
     cover.jpeg -- cover page or screenshot (for URLs)
 
+    index.html etc. only for _free_ content.
+
 Type: 'question'
 ----------------
 
@@ -79,8 +86,8 @@ Questions; the answers are stored in the private DB.
 
     language:
     text:
-    keep_anonymous: 
     answer_type: either 'boolean', 'string' (free form), or an array of possible answers
+    keep_anonymous:
 
 Db: "user-#{user_uuid}"
 =======================
@@ -96,6 +103,7 @@ Type: `store`
 Attachments: the offline version of the store.
 
     logo.png
+    index.html etc.
 
 Type: `profile`
 ---------------
@@ -115,10 +123,12 @@ Attachments:
 Type: `public_profile`
 ----------------------
 
+The local copy of the (shared) `public_profile`, if any.
+
 Type: `content`
 ---------------
 
-Replicated from `shared` database with additional fields:
+Replicated from `shared` or `private` databases with additional fields:
 
     categories: [] of category/bookshelves
     current_position: TBD reading position in the document
@@ -126,6 +136,7 @@ Replicated from `shared` database with additional fields:
 Attachments:
 
     index.html the main document describing the content
+    etc.
 
 Type: `answer`
 --------------
@@ -142,8 +153,17 @@ Db: 'private'
 
 Only accessible to internal (administrative/support) users.
 
+Security:
+
+    members.roles = ["internal_user"]
+
 Type: 'answer'
 --------------
 
     _id: 'answer:' + question_uuid + ':' + user_uuid
     question: question's uuid
+
+Type: 'content'
+---------------
+
+Paid-for content. Same as `content` in `shared`, but contains attachments for paid-for content.

@@ -38,6 +38,8 @@ We only list questions a given user did not already submit.
 
       questions: (the) ->
 
+        # FIXME keep_anonymous
+
         one_question = (el,q) =>
           # load the answer record
           console.log "Loading answer record for #{q.question}"
@@ -84,6 +86,22 @@ We only list questions a given user did not already submit.
             el = $ '<div/>'
             the.widget.append el
             one_question el, q
+
+Shelves
+=======
+
+Content
+=======
+
+Content comments
+================
+
+User Profile
+============
+
+Content submission
+==================
+
 
 Toolbox
 =======
