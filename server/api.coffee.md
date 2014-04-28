@@ -2,6 +2,7 @@
     UUID = require 'uuid'
     request = require 'superagent'
     PouchDB = require 'pouchdb'
+    config = require '/usr/local/etc/proxy.json'
 
     USER_PREFIX = 'org.couchdb.user'
 
@@ -15,9 +16,9 @@
       # TODO
       # Note: it's probably oauth. Let CouchDB auth for us.
       # (Use the "behind couchdb auth" scheme. -- except for initial registration everything must be authed by CouchDB, and we sit behind it so we can access its session cookie. Write middleware to validate the session cookie with CouchDB.)
-      @post '/_app/twitter-connect'
+      @post '/_app/twitter-connect', ->
         # pas besoin de mail de validation
-        twitter_connect ..., (ok) ->
+        twitter_connect (ok) ->
           if not ok then return @json error:'failed'
 
           create_user_account {username,password,validated:true}, (error,uuid) ->
@@ -32,7 +33,7 @@
         username = @body.authResponse.userID
 
         # pas besoin de mail de validation
-        facebook_connect ..., (ok) ->
+        facebook_connect (ok) ->
           if not ok then return @json error:'failed'
 
           create_user_account {username,password,validated:true}, (error,uuid) ->
@@ -81,7 +82,7 @@
             'user'
           ]
 
-        auth_db.get user_record, (error,res)
+        # auth_db.get user_record, (error,res)
 
         auth_db.put user_record, (error,res) ->
 
@@ -117,3 +118,25 @@
                   auth_db.put doc, (error) =>
                     if error then return next {error}
                     next null, uuid
+
+Reverse proxy towards CouchDB
+
+      make_proxy = (proxy_base) ->
+        return ->
+          proxy = request
+            uri: proxy_base + @request.url
+            method: @request.method
+            headers: @request.headers
+            jar: false
+            followRedirect: false
+            timeout: 1000
+          @request.pipe proxy
+          proxy.pipe @response
+          return
+
+      couchdb_proxy = make_proxy 'http://127.0.0.1:5984'
+      couchdb_urls = /^\/(_session|_users|_uuids|_utils|[^_])($|\/)/
+      @get  couchdb_urls, couchdb_proxy
+      @post couchdb_urls, couchdb_proxy
+      @put  couchdb_urls, couchdb_proxy
+      @del  couchdb_urls, couchdb_proxy
