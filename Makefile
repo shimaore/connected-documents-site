@@ -1,5 +1,5 @@
 
-push: test
+push: test push.coffee.md
 	coffee push.coffee.md
 
 build/build.js: build/main.js build/db.js build/views.js
