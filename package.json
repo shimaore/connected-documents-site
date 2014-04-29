@@ -46,6 +46,7 @@
     "zappajs": "^0.4.22",
     "pouchdb": "^2.1.2",
     "superagent": "^0.17.0",
-    "request": "^2.34.0"
+    "request": "^2.34.0",
+    "connect-redis": "^2.0.0"
   }
 }

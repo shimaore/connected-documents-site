@@ -1,10 +1,19 @@
     zappa = require 'zappajs'
     config = require '/usr/local/etc/proxy.json'
     create_user_account = require './create_user_account'
+    RedisStore = require('connect-redis')(express)
 
     zappa config, ->
 
       @use 'logger'
+
+      express_store = do =>
+        ExpressRedisStore = require('connect-redis') @express
+        new ExpressRedisStore()
+
+      @use session:
+        store: express_store
+        secret: config.session_secret
 
 Twitter connect
 ===============
