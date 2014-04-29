@@ -41,6 +41,7 @@
   },
   "private": true,
   "dependencies": {
-    "uuid": "^1.4.1"
+    "uuid": "^1.4.1",
+    "zappajs": "^0.4.22"
   }
 }
