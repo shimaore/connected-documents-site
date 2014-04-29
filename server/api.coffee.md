@@ -65,6 +65,10 @@ We authenticate using CouchDB; our internal username is an email adress (and ide
           @session.roles = ['user']
           @session.token = make_token @session
 
+          @json
+            ok: true
+            uuid: uuid
+
 Register
 ========
 

@@ -80,6 +80,7 @@ Hash-tag based routing
       @get '/home', ->
         # Home content:
         base = $ 'body'
+        base.empty()
 
         # Top menu: profile, logout
         append_view base, 'welcome_text'
@@ -127,6 +128,9 @@ Hash-tag based routing
             user_name = res.body.userCtx.name
 
           if not user_name
+            base = $ 'body'
+            base.empty()
+            append_view base, 'login'
             return console.log "No username" # FIXME
           else
             console.log "Username = #{user_name}"

@@ -13,6 +13,12 @@ These functions are called with:
       submit_response:
         fr: "J'ai répondu"
         en: "I answered"
+      login_error: # System / network error
+        fr: "Veuillez ré-essayer"
+        en: "Please try again"
+      login_failed: # User error
+        fr: "Email ou mot de passe incorrect"
+        en: "Invalid email or password"
 
     module.exports = widgets =
 
@@ -101,6 +107,41 @@ User Profile
 
 Content submission
 ==================
+
+Login widget
+============
+
+Shows the login prompt and options to login using Facebook and Twitter.
+
+      login: (the) ->
+        the.widget.html render ->
+          form ->
+            input type:'email', class:'username'
+            input type:'password', class:'password'
+            input type:'submit'
+            div class:'.notification'
+
+Form submission for internal users.
+
+        the.widget.on 'submit', 'form', (e) ->
+          event.preventDefault()
+          auth =
+            username: the.widget.find('.username').value()
+            password: the.widget.find('.password').value()
+          request
+          .post '/_app/local-connect'
+          .accept 'json'
+          .send auth
+          .end (res) ->
+            if not res.ok
+              the.widget.find('.notification').text texts.login_error[the.user.language]
+              return
+
+            if not res.body.ok
+              the.widget.find('.notification').text texts.login_failed[the.user.language]
+
+          return false
+
 
 
 Toolbox
