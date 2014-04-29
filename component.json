@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "component/router": "~0.0.1",
-    "component/dom": "^1.0.5",
+    "component/router": "master",
+    "component/dom": "master",
     "shimaore/pflock": "master",
-    "visionmedia/superagent": "~0.17.0"
+    "visionmedia/superagent": "master"
   },
   "scripts": [
     "build/main.js",
