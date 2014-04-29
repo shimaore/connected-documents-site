@@ -7,15 +7,15 @@ Reverse proxy towards CouchDB
 
       make_proxy = (proxy_base) ->
         return ->
-          if not @session.user?
-            @res.status 401
-            @json {error:'Not authenticated'}
-            return
-
           headers = [@request.headers...]
-          headers['X-Auth-CouchDB-UserName'] = @session.user
-          headers['X-Auth-CouchDB-Roles'] = @session.roles
-          headers['X-Auth-CouchDB-Token'] = @session.token
+          if @session.user?
+            headers['X-Auth-CouchDB-UserName'] = @session.user
+            headers['X-Auth-CouchDB-Roles'] = @session.roles
+            headers['X-Auth-CouchDB-Token'] = @session.token
+          else
+            delete headers['X-Auth-CouchDB-UserName']
+            delete headers['X-Auth-CouchDB-Roles']
+            delete headers['X-Auth-CouchDB-Token']
 
           proxy = request
             uri: proxy_base + @request.url
