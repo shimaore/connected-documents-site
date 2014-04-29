@@ -20,9 +20,9 @@ Reverse proxy towards CouchDB
 
       couchdb_proxy = make_proxy config.couchdb_url ? 'http://127.0.0.1:5984'
 
-      # FIXME restrict _all_dbs to admins?
+      # FIXME restrict _all_dbs|_config to admins?
 
-      couchdb_urls = /^\/(_session|_users|_uuids|_utils|_all_dbs|[^_][a-zA-Z0-9_-]*)($|\/)/
+      couchdb_urls = /^\/(_session|_users|_uuids|_utils|_all_dbs|_config|[^_][a-zA-Z0-9_-]*)($|\/)/
       @get  couchdb_urls, couchdb_proxy
       @post couchdb_urls, couchdb_proxy
       @put  couchdb_urls, couchdb_proxy
