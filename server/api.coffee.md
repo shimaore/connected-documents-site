@@ -1,7 +1,6 @@
     zappa = require 'zappajs'
     config = require '/usr/local/etc/proxy.json'
     create_user_account = require './create_user_account'
-    RedisStore = require('connect-redis')(express)
 
     zappa config, ->
 
