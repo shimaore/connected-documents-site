@@ -7,10 +7,20 @@ Reverse proxy towards CouchDB
 
       make_proxy = (proxy_base) ->
         return ->
+          if not @session.user?
+            @res.status 401
+            @json {error:'Not authenticated'}
+            return
+
+          headers = [@request.headers...]
+          headers['X-Auth-CouchDB-UserName'] = @session.user
+          headers['X-Auth-CouchDB-Roles'] = @session.roles
+          headers['X-Auth-CouchDB-Token'] = @session.token
+
           proxy = request
             uri: proxy_base + @request.url
             method: @request.method
-            headers: @request.headers
+            headers: headers
             jar: false
             followRedirect: false
             timeout: 1000
