@@ -45,6 +45,7 @@
     "uuid": "^1.4.1",
     "zappajs": "^0.4.22",
     "pouchdb": "^2.1.2",
-    "superagent": "^0.17.0"
+    "superagent": "^0.17.0",
+    "request": "^2.34.0"
   }
 }
