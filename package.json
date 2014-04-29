@@ -35,7 +35,7 @@
     "route-component": "^0.2.0",
     "jquery": "^2.1.0",
     "route": "^0.2.5",
-    "component": "^1.0.0-rc5",
+    "component": "^0.19.9",
     "coffee-script": "^1.7.1",
     "supercouch": "^0.2.4"
   },
