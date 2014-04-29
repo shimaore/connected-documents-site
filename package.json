@@ -42,6 +42,7 @@
   "private": true,
   "dependencies": {
     "uuid": "^1.4.1",
-    "zappajs": "^0.4.22"
+    "zappajs": "^0.4.22",
+    "pouchdb": "^2.1.2"
   }
 }
