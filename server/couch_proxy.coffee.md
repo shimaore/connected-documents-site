@@ -23,7 +23,7 @@ Reverse proxy towards CouchDB
             headers: headers
             jar: false
             followRedirect: false
-            timeout: 1000
+            timeout: 5000
           @request.pipe proxy
           proxy.pipe @response
           return
