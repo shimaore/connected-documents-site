@@ -10,6 +10,7 @@
         ExpressRedisStore = require('connect-redis') @express
         new ExpressRedisStore()
 
+      @use 'cookieParser'
       @use session:
         store: express_store
         secret: config.session_secret
