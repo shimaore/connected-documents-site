@@ -17,8 +17,10 @@ These access CouchDB with elevated priviledges.
 
       auth_id = [USER_PREFIX,username].join ':'
 
-      create_user (error,uuid) ->
+      create_user (error,uuid,created,validated) ->
         if error? then return next {error}
+        # Shortcut
+        if created then return next null, uuid
 
         create_user_db username, uuid, (error) ->
           if error? then return next {error}
@@ -31,9 +33,9 @@ These access CouchDB with elevated priviledges.
 
               auth_db.put doc, (error) ->
                 if error then return next {error}
-                next null
+                next null, uuid
 
-          if options.validated
+          if validated or options.validated
             mark_created next
           else
             send_validation_email username, (error) ->
@@ -46,7 +48,7 @@ These access CouchDB with elevated priviledges.
       auth_db.get auth_id, (error,doc) ->
         # Shortcut the case where the account was created fine.
         if doc?.created
-          return next null, doc.user_uuid
+          return next null, doc.user_uuid, true, doc.validated
 
         if error?
           # FIXME Assumes it is because the document doesn't exist.
@@ -62,7 +64,7 @@ These access CouchDB with elevated priviledges.
           _rev: doc?._rev
           user: username
           password: password
-          validated: validated
+          validated: validated ? false
           user_uuid: uuid
           roles: [
             'user'
@@ -71,22 +73,18 @@ These access CouchDB with elevated priviledges.
         # Create user record in auth
         auth_db.put user_record, (error,res) ->
           if error? then return next {error}
-          next null, uuid
+          next null, uuid, false, user_record.validated
 
     create_user_db = (username,uuid,next) ->
       # Create user DB
       # Note: since the base_url has admin auth, PouchDB will handle the creation for us.
       user_db = new PouchDB [config.base_url,uuid].join('/')
-
       # TODO initial replication ?
 
-      my_profile =
-        _id: 'profile'
-        uuid: uuid
-        username: username
-
-      user_db.put my_profile, (error,res) ->
-        if error then return next {error}
+      user_db.get 'profile', (error,doc) ->
+        # Shortcut the case this was created fine.
+        if doc?.uuid?
+          next null
 
         user_db_security =
           members:
@@ -98,7 +96,15 @@ These access CouchDB with elevated priviledges.
         .send user_db_security
         .end (res) ->
           if not res.ok then return next res
-          next null
+
+          my_profile =
+            _id: 'profile'
+            uuid: uuid
+            username: username
+
+          user_db.put my_profile, (error,res) ->
+            if error then return next {error}
+            next null
 
     send_validation_email = (username,next) ->
       # TODO implement

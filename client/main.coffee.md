@@ -4,7 +4,14 @@
 We do not support offline yet.
 
     offline = false
-    user_id = null
+    session =
+      user: null
+
+Application routing.
+
+    Router = require 'router' # component 'component-router'
+
+    router = new Router
 
 Create context for views.
 
@@ -15,6 +22,8 @@ Create context for views.
       base = "#{window.location.protocol}//#{window.location.host}"
       console.log "Using base = #{base}"
       the =
+        router: router
+        session: session
         shareddb: new DB if offline then 'shared' else "#{base}/shared"
         shared_submit: (data,cb) ->
           request
@@ -36,10 +45,10 @@ Create context for views.
         the.store = doc
         the.user = {}
 
-        if not offline and not user_id?
+        if not offline and not session.user?
           cb the
 
-        the.userdb = new DB if offline then 'user' else "#{base}/user-#{user_id}"
+        the.userdb = new DB if offline then 'user' else "#{base}/user-#{session.user}"
         the.userdb.pouch.get 'profile'
         .then (doc) ->
           the.user = doc
@@ -61,18 +70,12 @@ Append a view to the specific (component-dom) widget.
         console.log "Loading view #{view_name}"
         views[view_name]? the
 
-Application routing.
-
-    Router = require 'router' # component 'component-router'
-
-    router = new Router
-
 Hash-tag based routing
 
     routes = ->
 
       @get '', ->
-        if user_id?
+        if session.user?
           router.dispatch '/home'
         else
           router.dispatch '/login'
@@ -131,6 +134,7 @@ Hash-tag based routing
             base = $ 'body'
             base.empty()
             append_view base, 'login'
+            append_view base, 'register'
             return console.log "No username" # FIXME
           else
             console.log "Username = #{user_name}"
@@ -144,11 +148,10 @@ Hash-tag based routing
             # FIXME check for `created`
             # FIXME check for `validated`
             if res.body.user_uuid?
-              user_id = res.body.user_uuid
+              session.user = res.body.user_uuid
               router.dispatch '/home'
 
         # Registration
-
 
     routes.apply router
 
