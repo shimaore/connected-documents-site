@@ -8,6 +8,7 @@
     "visionmedia/superagent": "master"
   },
   "scripts": [
+    "index.js",
     "build/main.js",
     "build/db.js",
     "build/views.js"
