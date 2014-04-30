@@ -2,7 +2,7 @@
 push: test push.coffee.md
 	coffee push.coffee.md
 
-build/build.js: build/main.js build/db.js build/views.js
+build/build.js: index.js build/main.js build/db.js build/views.js
 	mkdir -p build
 	component build -s site
 
