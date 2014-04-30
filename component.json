@@ -1,5 +1,6 @@
 {
   "name": "b-sensory",
+  "version": "0.1.0",
   "dependencies": {
     "component/router": "master",
     "component/dom": "master",
