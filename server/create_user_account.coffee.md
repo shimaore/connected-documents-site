@@ -28,7 +28,7 @@ Create user record in `auth_db`
           if error?
             # FIXME Assumes it is because the document doesn't exist.
             console.dir auth_db_get:error
-            uuid = new UUID()
+            uuid = UUID.v4()
           else
             # Document exists, but creation failed for some reason.
             uuid = doc.user_uuid
