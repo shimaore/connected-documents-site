@@ -6,6 +6,9 @@ We do not support offline yet.
     offline = false
     session =
       user: null
+      language: null
+
+    default_language: 'fr'
 
 Application routing.
 
@@ -39,26 +42,45 @@ Create context for views.
           .timeout 1000
           .end (res) ->
             cb res.ok
+        user: {}
+
+      set_language = (next) ->
+        if session.language?
+          the.user.language = session.language
+          next the
+          return
+
+        request
+        .get '/_app/language'
+        .accept 'json'
+        .end (res) ->
+          if res.ok and res.body?[0]?
+            session.language = res.body[0].code
+          else
+            session.language = default_language
+          the.user.language = session.language
+          next the
 
       the.shareddb.pouch.get 'store'
       .then (doc) ->
         the.store = doc
-        the.user = {}
 
         if not offline and not session.user?
-          cb the
+          set_language cb
+          return
 
         the.userdb = new DB if offline then 'user' else "#{base}/user-#{session.user}"
         the.userdb.pouch.get 'profile'
         .then (doc) ->
           the.user = doc
-          cb the
+          set_language cb
         .catch (error) ->
           console.log user_profile:error
+          set_language cb
 
       .catch (error) ->
         console.log store:error
-        cb the
+        set_language cb
         # FIXME Notify user? Retry?
 
 Append a view to the specific (component-dom) widget.

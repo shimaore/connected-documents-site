@@ -2,7 +2,11 @@
     config = require '/usr/local/etc/proxy.json'
     create_user_account = require './create_user_account'
 
+    acceptLanguage = require 'accept-language'
+
     zappa config, ->
+
+      acceptLanguage.codes config.languages
 
       @use 'logger'
 
@@ -16,6 +20,12 @@
         secret: config.session_secret
 
       @include './connect'
+
+Language
+========
+
+      @get '/_app/language', ->
+        @json acceptLanguage.parse @req.get 'accept-language'
 
 Twitter connect
 ===============

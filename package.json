@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prepublish": "grunt",
-    "test": "grunt test",
+    "test": "grunt test && coffee push.coffee.md",
     "start": "coffee server/api.coffee.md"
   },
   "author": "Stéphane Alnet <stephane@shimaore.net> (http://shimaore.net/)",
@@ -45,6 +45,7 @@
     "pouchdb": "^2.1.2",
     "superagent": "^0.17.0",
     "request": "^2.34.0",
-    "connect-redis": "1.4.7"
+    "connect-redis": "1.4.7",
+    "accept-language": "^1.0.11"
   }
 }
