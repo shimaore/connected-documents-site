@@ -17,6 +17,44 @@ These access CouchDB with elevated priviledges.
 
       auth_id = [USER_PREFIX,username].join ':'
 
+Create user record in `auth_db`
+===============================
+
+      # Note: properly created record will have a 'created:true' field.
+      create_user = (next) ->
+        auth_db.get auth_id, (error,doc) ->
+          # Shortcut the case where the account was created fine.
+          if doc?.created
+            return next null, doc.user_uuid, true, doc.validated
+
+          if error?
+            # FIXME Assumes it is because the document doesn't exist.
+            console.dir auth_db_get:error
+            uuid = new UUID()
+          else
+            # Document exists, but creation failed for some reason.
+            uuid = doc.user_uuid
+
+          user_record =
+            type: 'user'
+            _id: auth_id
+            _rev: doc?._rev
+            user: username
+            password: password
+            validated: validated ? false
+            user_uuid: uuid
+            roles: [
+              'user'
+            ]
+
+          # Create user record in auth
+          auth_db.put user_record, (error,res) ->
+            if error? then return next {error}
+            next null, uuid, false, user_record.validated
+
+Main body for `create_user_account`
+===================================
+
       create_user (error,uuid,created,validated) ->
         if error? then return next {error}
         # Shortcut
@@ -42,38 +80,6 @@ These access CouchDB with elevated priviledges.
               if error? then return next {error}
               mark_created next
 
-
-    # Note: properly created record will have a 'created:true' field.
-    create_user = (auth_id,next) ->
-      auth_db.get auth_id, (error,doc) ->
-        # Shortcut the case where the account was created fine.
-        if doc?.created
-          return next null, doc.user_uuid, true, doc.validated
-
-        if error?
-          # FIXME Assumes it is because the document doesn't exist.
-          console.dir auth_db_get:error
-          uuid = new UUID()
-        else
-          # Document exists, but creation failed for some reason.
-          uuid = doc.user_uuid
-
-        user_record =
-          type: 'user'
-          _id: auth_id
-          _rev: doc?._rev
-          user: username
-          password: password
-          validated: validated ? false
-          user_uuid: uuid
-          roles: [
-            'user'
-          ]
-
-        # Create user record in auth
-        auth_db.put user_record, (error,res) ->
-          if error? then return next {error}
-          next null, uuid, false, user_record.validated
 
     create_user_db = (username,uuid,next) ->
       # Create user DB
