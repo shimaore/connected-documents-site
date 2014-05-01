@@ -1,5 +1,4 @@
     config = require '/usr/local/etc/proxy.json'
-    crypto = require 'crypto'
     request = require 'superagent'
     UUID = require 'uuid'
     PouchDB = require 'pouchdb'
@@ -124,10 +123,3 @@ Main body for `create_user_account`
 
       # FIXME returns "always succeeded"
       next null
-
-    make_token = (o) ->
-      secret = config.couch_secret
-      sum = crypto.createHash 'sha1'
-      sum.update secret
-      sum.update o.user
-      sum.digest 'hex'

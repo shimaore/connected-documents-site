@@ -1,5 +1,6 @@
     zappa = require 'zappajs'
     config = require '/usr/local/etc/proxy.json'
+    crypto = require 'crypto'
     create_user_account = require './create_user_account'
 
     acceptLanguage = require 'accept-language'
@@ -130,3 +131,10 @@ Couch Proxy
 ===========
 
       @include './couch_proxy'
+
+    make_token = (o) ->
+      secret = config.couch_secret
+      sum = crypto.createHash 'sha1'
+      sum.update secret
+      sum.update o.user
+      sum.digest 'hex'
