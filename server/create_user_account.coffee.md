@@ -23,7 +23,7 @@ Create user record in `auth_db`
         auth_db.get auth_id, (error,doc) ->
           # Shortcut the case where the account was created fine.
           if doc?.created
-            return next null, doc.user_uuid, true, doc.validated
+            return next null, uuid:doc.user_uuid, created:true, validated:doc.validated
 
           if error?
             # FIXME Assumes it is because the document doesn't exist.
@@ -49,14 +49,14 @@ Create user record in `auth_db`
           auth_db
           .put user_record
           .then ->
-            next null, uuid, false, user_record.validated
+            next null, uuid:uuid, created:false, validated:user_record.validated
           .catch (error) ->
             next auth_db_put:error
 
 Main body for `create_user_account`
 ===================================
 
-      create_user (error,uuid,created,validated) ->
+      create_user (error,{uuid,created,validated}) ->
         if error? then return next create_user:error
         # Shortcut
         if created then return next null, uuid
