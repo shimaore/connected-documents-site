@@ -8,6 +8,7 @@ These functions are called with:
 
     pflock = require 'pflock-browserify'
     $ = require 'jquery'
+    request = require 'superagent'
 
     texts =
       submit_response:
@@ -136,9 +137,11 @@ Shows the login prompt and options to login using Facebook and Twitter.
         the.widget.html render ->
           section class:'login', ->
             form ->
-              label texts.email[the.user.language], ->
+              label ->
+                span texts.email[the.user.language]
                 input type:'email', class:'username'
-              label texts.password[the.user.language], ->
+              label ->
+                span texts.password[the.user.language]
                 input type:'password', class:'password'
               input type:'submit', value:texts.login_submit[the.user.language]
               div class:'.notification'
@@ -147,10 +150,10 @@ Form submission for internal users.
 
         the.widget.on 'submit', 'form', (e) ->
           console.log 'submit login form'
-          event.preventDefault()
+          e.preventDefault()
           auth =
-            username: the.widget.find('.username').value()
-            password: the.widget.find('.password').value()
+            username: the.widget.find('.username').val() # val() for jQuery, value() for component/dom
+            password: the.widget.find('.password').val()
           request
           .post '/_app/local-connect'
           .accept 'json'
@@ -178,9 +181,11 @@ Register widget
         the.widget.html render ->
           section class:'register', ->
             form ->
-              label texts.email[the.user.language], ->
+              label ->
+                span texts.email[the.user.language]
                 input type:'email', class:'username'
-              label texts.password[the.user.language], ->
+              label ->
+                span texts.password[the.user.language]
                 input type:'password', class:'password'
               input type:'submit', value:texts.register_submit[the.user.language]
               div class:'.notification'
@@ -189,10 +194,10 @@ Form submission for internal users.
 
         the.widget.on 'submit', 'form', (e) ->
           console.log 'submit register form'
-          event.preventDefault()
+          e.preventDefault()
           auth =
-            username: the.widget.find('.username').value()
-            password: the.widget.find('.password').value()
+            username: the.widget.find('.username').val()
+            password: the.widget.find('.password').val()
           request
           .post '/_app/register'
           .accept 'json'
