@@ -59,7 +59,7 @@ These access CouchDB with elevated priviledges.
           uuid = doc.user_uuid
 
         user_record =
-          type: user
+          type: 'user'
           _id: auth_id
           _rev: doc?._rev
           user: username
