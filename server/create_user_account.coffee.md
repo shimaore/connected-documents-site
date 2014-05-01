@@ -88,7 +88,7 @@ Main body for `create_user_account`
     create_user_db = (username,uuid,next) ->
       # Create user DB
       # Note: since the base_url has admin auth, PouchDB will handle the creation for us.
-      user_db = new PouchDB [config.base_url,uuid].join('/')
+      user_db = new PouchDB [config.base_url,"user-#{uuid}"].join('/')
       # TODO initial replication ?
 
       user_db.get 'profile', (error,doc) ->
