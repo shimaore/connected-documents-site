@@ -6,8 +6,8 @@ These functions are called with:
 `store` -- the `store` record in `shareddb` when online, `userdb` when offline
 `user` -- the `profile` record for the user (found in their `userdb`)
 
-    pflock = require 'pflock'
-    $ = require 'dom'
+    pflock = require 'pflock-browserify'
+    $ = require 'jquery'
 
     texts =
       submit_response:

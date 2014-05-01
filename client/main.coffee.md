@@ -1,4 +1,4 @@
-    $ = require 'dom'
+    $ = require 'jquery'
     request = require 'superagent'
 
 We do not support offline yet.
@@ -9,14 +9,14 @@ We do not support offline yet.
 
 Application routing.
 
-    Router = require 'router' # component 'component-router'
+    Router = require 'router-component'
 
     router = new Router
 
 Create context for views.
 
-    DB = require './db'
-    views = require './views'
+    DB = require './db.coffee.md'
+    views = require './views.coffee.md'
 
     in_context = (cb) ->
       base = "#{window.location.protocol}//#{window.location.host}"

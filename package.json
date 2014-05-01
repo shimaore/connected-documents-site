@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prepublish": "make",
-    "test": "make test",
+    "prepublish": "grunt",
+    "test": "grunt test",
     "start": "coffee server/api.coffee.md"
   },
   "author": "Stéphane Alnet <stephane@shimaore.net> (http://shimaore.net/)",
@@ -31,14 +31,12 @@
     "pouchdb": "^2.1.2",
     "grunt-shell": "^0.7.0",
     "grunt-notify": "^0.3.0",
-    "pflock": "git+https://github.com/manuelstofer/pflock.git",
     "router-component": "0.0.1",
     "route-component": "^0.2.0",
     "jquery": "^2.1.0",
-    "route": "^0.2.5",
-    "component": "^0.19.9",
     "coffee-script": "^1.7.1",
-    "supercouch": "^0.2.4"
+    "supercouch": "^0.2.4",
+    "pflock-browserify": "0.6.4"
   },
   "private": true,
   "dependencies": {
