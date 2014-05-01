@@ -49,35 +49,35 @@ Create user record in `auth_db`
 
           # Create user record in auth
           auth_db.put user_record, (error,res) ->
-            if error? then return next {error}
+            if error? then return next auth_db_put:error
             next null, uuid, false, user_record.validated
 
 Main body for `create_user_account`
 ===================================
 
       create_user (error,uuid,created,validated) ->
-        if error? then return next {error}
+        if error? then return next create_user:error
         # Shortcut
         if created then return next null, uuid
 
         create_user_db username, uuid, (error) ->
-          if error? then return next {error}
+          if error? then return next create_user_db:error
 
           mark_created = (auth_id,next) ->
             auth_db.get auth_id, (error,doc) ->
-              if error then return next {error}
+              if error then return next auth_db_get:error
 
               doc.created = true
 
               auth_db.put doc, (error) ->
-                if error then return next {error}
+                if error then return next auth_db_put:error
                 next null, uuid
 
           if validated or options.validated
             mark_created next
           else
             send_validation_email username, (error) ->
-              if error? then return next {error}
+              if error? then return next send_validation_email:error
               mark_created next
 
 
@@ -101,7 +101,7 @@ Main body for `create_user_account`
         .put [config.base_url,uuid,'_security'].join('/')
         .send user_db_security
         .end (res) ->
-          if not res.ok then return next res
+          if not res.ok then return next user_db_security_put:res
 
           my_profile =
             _id: 'profile'
@@ -109,7 +109,7 @@ Main body for `create_user_account`
             username: username
 
           user_db.put my_profile, (error,res) ->
-            if error then return next {error}
+            if error then return next user_db_put:error
             next null
 
     send_validation_email = (username,next) ->
