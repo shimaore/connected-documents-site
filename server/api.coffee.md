@@ -10,6 +10,8 @@
 
       @use 'logger'
 
+      bodyParser = @express.bodyParser()
+
       express_store = do =>
         ExpressRedisStore = require('connect-redis') @express
         new ExpressRedisStore()
@@ -40,7 +42,7 @@ Twitter connect
 
 We authenticate using Twitter; our internal username starts with "twitter:".
 
-      @post '/_app/twitter-connect', ->
+      @post '/_app/twitter-connect', [bodyParser], ->
 
         # pas besoin de mail de validation
         @twitter_connect (ok) =>
@@ -61,7 +63,7 @@ Facebook connect
 
 We authenticate using Facebook; our internal username starts with "facebook:".
 
-      @post '/_app/facebook-connect', ->
+      @post '/_app/facebook-connect', [bodyParser], ->
 
         username = @body.authResponse.userID
 
@@ -84,7 +86,7 @@ Local connect
 
 We authenticate using CouchDB; our internal username is an email adress (and identical to the CouchDB username).
 
-      @post '/_app/local-connect', ->
+      @post '/_app/local-connect', [bodyParser], ->
 
         @local_connect (ok) =>
 
@@ -107,9 +109,9 @@ Register
 
 This is only necessary for internal users.
 
-      @post '/_app/register', ->
+      @post '/_app/register', [bodyParser] ->
 
-        if @session.user
+        if @session.user?
           return @json already_connected: true
 
         username = @body.username
