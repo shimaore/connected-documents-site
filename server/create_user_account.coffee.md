@@ -37,7 +37,7 @@ Create user record in `auth_db`
             type: 'user'
             _id: auth_id
             _rev: doc?._rev
-            user: username
+            name: username
             password: password
             validated: validated ? false
             user_uuid: uuid
