@@ -51,7 +51,7 @@ Create user record in `auth_db`
           .then ->
             next null, uuid:uuid, created:false, validated:user_record.validated
           .catch (error) ->
-            next auth_db_put:error
+            next auth_db_put:error, {}
 
 Main body for `create_user_account`
 ===================================
