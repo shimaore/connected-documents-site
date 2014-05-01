@@ -8,7 +8,7 @@
         password = @body.password
 
         request
-        .post '/_session'
+        .post [config.base_url,'_session'].join '/'
         .send {name,password}
         .accept 'json'
         .end (res) ->
