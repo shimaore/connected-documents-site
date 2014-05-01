@@ -13,12 +13,24 @@ These functions are called with:
       submit_response:
         fr: "J'ai répondu"
         en: "I answered"
+      email:
+        fr: 'Address de mail'
+        en: 'Email address'
+      password:
+        fr: 'Mot de passe'
+        en: 'Password'
+      login_submit:
+        fr: 'Login'
+        en: 'Login'
       login_error: # System / network error
         fr: "Veuillez ré-essayer"
         en: "Please try again"
       login_failed: # User error
         fr: "Email ou mot de passe incorrect"
         en: "Invalid email or password"
+      register_submit:
+        fr: 'Register'
+        en: 'Register'
       register_error: # System / network error
         fr: "Veuillez ré-essayer"
         en: "Please try again"
@@ -124,9 +136,11 @@ Shows the login prompt and options to login using Facebook and Twitter.
         the.widget.html render ->
           section class:'login', ->
             form ->
-              input type:'email', class:'username'
-              input type:'password', class:'password'
-              input type:'submit'
+              label texts.email[the.user.language], ->
+                input type:'email', class:'username'
+              label texts.password[the.user.language], ->
+                input type:'password', class:'password'
+              input type:'submit', value:texts.login_submit[the.user.language]
               div class:'.notification'
 
 Form submission for internal users.
@@ -154,6 +168,8 @@ Form submission for internal users.
 
           return false
 
+        console.log "View login is ready"
+
 Register widget
 ===============
 
@@ -161,9 +177,11 @@ Register widget
         the.widget.html render ->
           section class:'register', ->
             form ->
-              input type:'email', class:'username'
-              input type:'password', class:'password'
-              input type:'submit'
+              label texts.email[the.user.language], ->
+                input type:'email', class:'username'
+              label texts.password[the.user.language], ->
+                input type:'password', class:'password'
+              input type:'submit', value:texts.register_submit[the.user.language]
               div class:'.notification'
 
 Form submission for internal users.
@@ -195,4 +213,4 @@ Form submission for internal users.
 Toolbox
 =======
 
-    {render,input,select,option,span,div,a,script,raw} = require 'teacup'
+    {render,input,section,form,select,option,span,div,a,script,raw} = require 'teacup'
