@@ -58,6 +58,7 @@ Create context for views.
 
       .catch (error) ->
         console.log store:error
+        cb the
         # FIXME Notify user? Retry?
 
 Append a view to the specific (component-dom) widget.
