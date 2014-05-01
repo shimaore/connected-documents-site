@@ -64,7 +64,7 @@ Main body for `create_user_account`
         create_user_db username, uuid, (error) ->
           if error? then return next create_user_db:error
 
-          mark_created = (auth_id,next) ->
+          mark_created = (next) ->
             auth_db.get auth_id, (error,doc) ->
               if error? then return next auth_db_get:error
 
