@@ -5,8 +5,6 @@
     PouchDB = require 'pouchdb'
     USER_PREFIX = 'org.couchdb.user'
 
-    # TODO find promise-based way of doing the pouch stuff (no error/res stuff.. BUT need yield support in coffeescript)
-
 These access CouchDB with elevated priviledges.
 
     auth_db = new PouchDB [config.base_url,'_users'].join '/'
@@ -48,9 +46,12 @@ Create user record in `auth_db`
             ]
 
           # Create user record in auth
-          auth_db.put user_record, (error,res) ->
-            if error? then return next auth_db_put:error
+          auth_db
+          .put user_record
+          .then ->
             next null, uuid, false, user_record.validated
+          .catch (error) ->
+            next auth_db_put:error
 
 Main body for `create_user_account`
 ===================================
@@ -69,9 +70,12 @@ Main body for `create_user_account`
 
               doc.created = true
 
-              auth_db.put doc, (error) ->
-                if error then return next auth_db_put:error
+              auth_db
+              .put doc
+              .then ->
                 next null, uuid
+              .catch (error) ->
+                next auth_db_put:error
 
           if validated or options.validated
             mark_created next
@@ -108,9 +112,12 @@ Main body for `create_user_account`
             uuid: uuid
             username: username
 
-          user_db.put my_profile, (error,res) ->
-            if error then return next user_db_put:error
+          user_db
+          .put my_profile
+          .then ->
             next null
+          .catch (error) ->
+            next user_db_put:error
 
     send_validation_email = (username,next) ->
       # TODO implement
