@@ -9,8 +9,8 @@
 
 These access CouchDB with elevated priviledges.
 
-    auth_db = new PouchDB [config.base_url,'_users']
-    shared_db = new PouchDB [config.base_url,'public']
+    auth_db = new PouchDB [config.base_url,'_users'].join '/'
+    shared_db = new PouchDB [config.base_url,'public'].join '/'
 
     module.exports = create_user_account = (options,next) ->
       {username,password,validated} = options
