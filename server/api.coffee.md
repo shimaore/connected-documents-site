@@ -27,6 +27,14 @@ Language
       @get '/_app/language', ->
         @json acceptLanguage.parse @req.get 'accept-language'
 
+Session
+=======
+
+      @get '/_app/session', ->
+        @json
+          user: @session.user
+          roles: @session.roles
+
 Twitter connect
 ===============
 

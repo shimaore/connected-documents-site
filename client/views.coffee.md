@@ -146,6 +146,7 @@ Shows the login prompt and options to login using Facebook and Twitter.
 Form submission for internal users.
 
         the.widget.on 'submit', 'form', (e) ->
+          console.log 'submit login form'
           event.preventDefault()
           auth =
             username: the.widget.find('.username').value()
@@ -187,6 +188,7 @@ Register widget
 Form submission for internal users.
 
         the.widget.on 'submit', 'form', (e) ->
+          console.log 'submit register form'
           event.preventDefault()
           auth =
             username: the.widget.find('.username').value()
@@ -209,8 +211,9 @@ Form submission for internal users.
 
           return false
 
+        console.log "View register is ready"
 
 Toolbox
 =======
 
-    {render,input,section,form,select,option,span,div,a,script,raw} = require 'teacup'
+    {render,input,section,label,form,select,option,span,div,a,script,raw} = require 'teacup'

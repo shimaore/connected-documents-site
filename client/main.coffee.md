@@ -27,7 +27,6 @@ Create context for views.
       the =
         router: router
         session: session
-        shareddb: new DB if offline then 'shared' else "#{base}/shared"
         shared_submit: (data,cb) ->
           request
           .post '/_app/shared_submit'
@@ -61,13 +60,20 @@ Create context for views.
           the.user.language = session.language
           next the
 
+Avoid showing a login prompt if we're not logged in.
+
+      if not offline and not session.user?
+        console.log 'Avoiding database queries'
+        set_language cb
+        return
+
+      console.log "Loading for user #{session.user}"
+
+      the.shareddb = new DB if offline then 'shared' else "#{base}/shared"
+
       the.shareddb.pouch.get 'store'
       .then (doc) ->
         the.store = doc
-
-        if not offline and not session.user?
-          set_language cb
-          return
 
         the.userdb = new DB if offline then 'user' else "#{base}/user-#{session.user}"
         the.userdb.pouch.get 'profile'
@@ -146,38 +152,21 @@ Hash-tag based routing
       @get '/login', ->
         # Login with email/password, facebook connect, or twitter connect
 
-        ## For now use CouchDB session; later we'll use our own authenticating proxy.
         request
-        .get '/_session'
+        .get '/_app/session'
         .accept 'json'
         .end (res) ->
-          if not res.ok
-            return console.log "Session failed" # FIXME
-          if res.body.userCtx.name?
-            user_name = res.body.userCtx.name
+          if res.ok and res.body?.user?
+            session.user = res.body.user
+            session.roles = res.body.roles
+            router.dispatch '/home'
+            return
 
-          if not user_name
-            base = $ 'body'
-            base.empty()
-            append_view base, 'login'
-            append_view base, 'register'
-            return console.log "No username" # FIXME
-          else
-            console.log "Username = #{user_name}"
-
-          request
-          .get "/_users/org.couchdb.user:#{user_name}"
-          .accept 'json'
-          .end (res) ->
-            if not res.ok
-              return console.log "No user info" # FIXME
-            # FIXME check for `created`
-            # FIXME check for `validated`
-            if res.body.user_uuid?
-              session.user = res.body.user_uuid
-              router.dispatch '/home'
-
-        # Registration
+          base = $ 'body'
+          base.empty()
+          append_view base, 'login'
+          append_view base, 'register'
+          return
 
     routes.apply router
 
