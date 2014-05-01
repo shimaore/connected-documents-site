@@ -28,7 +28,7 @@
     "debowerify": "^0.7.0",
     "decomponentify": "0.0.3",
     "browserify": "^3.44.2",
-    "pouchdb": "^2.1.2",
+    "pouchdb": "^2.2.0",
     "grunt-shell": "^0.7.0",
     "grunt-notify": "^0.3.0",
     "router-component": "0.0.1",
