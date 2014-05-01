@@ -88,7 +88,7 @@ Main body for `create_user_account`
     create_user_db = (username,uuid,next) ->
       # Create user DB
       # Note: since the base_url has admin auth, PouchDB will handle the creation for us.
-      user_db = new PouchDB [config.base_url,"user-#{uuid}"].join('/')
+      user_db = new PouchDB [config.base_url,"user-#{uuid}"].join '/'
       # TODO initial replication ?
 
       user_db.get 'profile', (error,doc) ->
@@ -102,7 +102,7 @@ Main body for `create_user_account`
             roles: ['userdb_reader','userdb_writer']
 
         request
-        .put [config.base_url,uuid,'_security'].join('/')
+        .put [config.base_url,"user-#{uuid}",'_security'].join '/'
         .send user_db_security
         .end (res) ->
           if not res.ok then return next user_db_security_put:res
