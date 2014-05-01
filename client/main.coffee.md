@@ -90,8 +90,11 @@ Append a view to the specific (component-dom) widget.
         the.widget = $ '<div/>'
         base_widget.append the.widget
 
-        console.log "Loading view #{view_name}"
-        views[view_name]? the
+        if views[view_name]?
+          console.log "Loading view #{view_name}"
+          views[view_name] the
+        else
+          console.log "Unknown view #{view_name}"
 
 Hash-tag based routing
 
