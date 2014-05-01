@@ -109,7 +109,7 @@ Register
 
 This is only necessary for internal users.
 
-      @post '/_app/register', [bodyParser] ->
+      @post '/_app/register', [bodyParser], ->
 
         if @session.user?
           return @json already_connected: true
