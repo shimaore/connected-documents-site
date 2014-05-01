@@ -9,7 +9,7 @@ We do not support offline yet.
 
 Application routing.
 
-    Router = require 'router-component'
+    Router = require './component/router'
 
     router = new Router
 
