@@ -23,6 +23,7 @@
         secret: config.session_secret
 
       @include './connect'
+      @include './render'
 
 Language
 ========
