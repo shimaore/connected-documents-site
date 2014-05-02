@@ -11,6 +11,9 @@ These functions are called with:
     request = require 'superagent'
 
     texts =
+      logout:
+        fr: 'Déconnexion'
+        en: 'Log out'
       submit_response:
         fr: "J'ai répondu"
         en: "I answered"
@@ -48,6 +51,9 @@ Texte administrable (welcome text)
       welcome_text: (the) ->
         if the.store.welcome_text?
           the.widget.text the.store.welcome_text[the.user.language]
+
+      logout: (the) ->
+        the.widget.text the.store.logout[the.user.language]
 
 Twitter feeds
 =============

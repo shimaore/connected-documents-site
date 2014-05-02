@@ -168,6 +168,9 @@ Hash-tag based routing
           append_view base, 'register'
           return
 
+      @get '/logout', ->
+        delete session.user
+
     routes.apply router
 
 Handle hashtag changes.

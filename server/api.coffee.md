@@ -137,7 +137,6 @@ Couch Proxy
 
     make_token = (o) ->
       secret = config.couch_secret
-      sum = crypto.createHash 'sha1'
-      sum.update secret
-      sum.update o.name
-      sum.digest 'hex'
+      hmac = crypto.createHmac 'sha1', secret
+      hmac.update o.name
+      hmac.digest 'hex'
