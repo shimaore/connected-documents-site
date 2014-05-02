@@ -51,6 +51,7 @@ We authenticate using Twitter; our internal username starts with "twitter:".
 
           username = "twitter:#{twitter_userid}"
           create_user_account {username,validated:true}, (error,uuid) =>
+            @session.name = username
             @session.user = uuid
             @session.roles = ['user']
             @session.token = make_token @session
@@ -74,7 +75,8 @@ We authenticate using Facebook; our internal username starts with "facebook:".
 
           username = "facebook:#{twitter_userid}"
           create_user_account {username,validated:true}, (error,uuid) =>
-            @session.user = username
+            @session.name = username
+            @session.user = uuid
             @session.roles = ['user']
             @session.token = make_token @session
 
@@ -97,7 +99,8 @@ We authenticate using CouchDB; our internal username is an email adress (and ide
           password = @body.password
 
           create_user_account {username,password}, (error,uuid) =>
-            @session.user = username
+            @session.name = username
+            @session.user = uuid
             @session.roles = ['user']
             @session.token = make_token @session
 
