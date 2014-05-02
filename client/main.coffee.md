@@ -180,11 +180,16 @@ Hash-tag based routing
         request
         .post '/_app/website-image'
         .send url:'http://shimaore.net'
+        ## .accept 'image/png'
         .accept 'json'
         .end (res) ->
-          blob = res.body
-          src = URL.createObjectURL blob
-          base.html """ <img src="#{src}"/> """
+          ###
+          blob = new Blob res.text, type:'image/png'
+          src = window.URL.createObjectURL blob
+          ###
+          src = "data:image/png;base64,#{res.body.content}"
+          $( '<img/>', src:src ).appendTo base
+          window.URL.revokeObjectURL src
 
     routes.apply router
 

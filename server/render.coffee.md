@@ -23,9 +23,13 @@ Handle requests for images by proxying them.
         .accept 'json'
         .end (res) =>
           if res.ok
+            @json res.body
+            ###
+            # The following works just fine, but is difficult to use client-side.
             buf = new Buffer res.body.content, 'base64'
             @res.set 'Content-Type', 'image/png'
             @send buf
+            ###
           else
             @res.status 500
             @send ''
