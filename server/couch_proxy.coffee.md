@@ -9,7 +9,7 @@ Reverse proxy towards CouchDB
         return ->
           headers = [@request.headers...]
           if @session.user?
-            headers['X-Auth-CouchDB-UserName'] = @session.user
+            headers['X-Auth-CouchDB-UserName'] = @session.name
             headers['X-Auth-CouchDB-Roles'] = @session.roles
             headers['X-Auth-CouchDB-Token'] = @session.token
           else

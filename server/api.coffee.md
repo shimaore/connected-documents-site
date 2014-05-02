@@ -139,5 +139,5 @@ Couch Proxy
       secret = config.couch_secret
       sum = crypto.createHash 'sha1'
       sum.update secret
-      sum.update o.user
+      sum.update o.name
       sum.digest 'hex'
