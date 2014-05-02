@@ -79,6 +79,7 @@ Avoid showing a login prompt if we're not logged in.
         the.userdb.pouch.get 'profile'
         .then (doc) ->
           the.user = doc
+          session.language = doc.language
           set_language cb
         .catch (error) ->
           console.log user_profile:error
