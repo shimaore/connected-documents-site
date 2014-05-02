@@ -13,9 +13,10 @@ Reverse proxy towards CouchDB
             headers['X-Auth-CouchDB-Roles'] = @session.roles
             headers['X-Auth-CouchDB-Token'] = @session.token
           else
-            @res.status 400
-            @json error:'no_session'
-            return
+            unless @req.method is 'GET' and @req.path.match /^\/public/
+              @res.status 400
+              @json error:'no_session'
+              return
 
           proxy = request
             uri: proxy_base + @request.url
