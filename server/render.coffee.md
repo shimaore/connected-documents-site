@@ -5,6 +5,8 @@ Start the image rendering service.
 
     renderer = require './render/start'
 
+    do renderer
+
 Handle requests for images by proxying them.
 
     request = require 'superagent'
