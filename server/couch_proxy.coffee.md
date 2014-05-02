@@ -13,9 +13,9 @@ Reverse proxy towards CouchDB
             headers['X-Auth-CouchDB-Roles'] = @session.roles
             headers['X-Auth-CouchDB-Token'] = @session.token
           else
-            delete headers['X-Auth-CouchDB-UserName']
-            delete headers['X-Auth-CouchDB-Roles']
-            delete headers['X-Auth-CouchDB-Token']
+            @res.status 400
+            @json error:'no_session'
+            return
 
           proxy = request
             uri: proxy_base + @request.url
