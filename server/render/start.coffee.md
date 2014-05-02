@@ -11,13 +11,11 @@ Start rendering using SlimerJS
         'server.js'
       ]
 
-      ###
       cl.stderr.on 'data', (data) ->
         console.log 'stderr: '+data
 
       cl.stdout.on 'data', (data) ->
         console.log 'stdout: '+data
-      ###
 
       cl.on 'close', (code) ->
         console.log 'Renderer exited with '+code

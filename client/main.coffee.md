@@ -174,6 +174,18 @@ Hash-tag based routing
         session.user = null
         router.dispatch ''
 
+      @get '/test', ->
+        base = $ 'body'
+        base.empty()
+        request
+        .post '/_app/website-image'
+        .send url:'http://shimaore.net'
+        .accept 'json'
+        .end (res) ->
+          blob = res.body
+          src = URL.createObjectURL blob
+          base.html """ <img src="#{src}"/> """
+
     routes.apply router
 
 Handle hashtag changes.
