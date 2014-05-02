@@ -1,4 +1,8 @@
-    _id = -> [arguments...].join ':'
+    _id = (type,key) ->
+      if key?
+        [type,key].join ':'
+      else
+        type
 
     PouchDB = require 'pouchdb'
 
