@@ -170,7 +170,8 @@ Hash-tag based routing
           return
 
       @get '/logout', ->
-        delete session.user
+        session.user = null
+        router.dispatch ''
 
     routes.apply router
 
