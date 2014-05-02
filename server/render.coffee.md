@@ -11,6 +11,8 @@ Handle requests for images by proxying them.
 
     @include = ->
 
+      bodyParser = @express.bodyParser()
+
       @post '/_app/website-image', [bodyParser], ->
         url = @body.url
         request
