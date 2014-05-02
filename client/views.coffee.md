@@ -60,8 +60,8 @@ Twitter feeds
 
       twitter_feeds: (the) ->
         if the.store.twitter_username? and the.store.twitter_widget_id?
-          the.widget.forEach (el) ->
-            window.twttr?.widgets.createTimeline the.store.twitter_widget_id, el, -> console.log 'timeline done'
+          the.widget.each ->
+            window.twttr?.widgets.createTimeline the.store.twitter_widget_id, this, -> console.log 'timeline done'
 
 Questions
 =========
@@ -103,8 +103,8 @@ We only list questions a given user did not already submit.
                 span texts.submit_response[the.user.language]
                 input type:'checkbox', 'x-bind':'value:/answer/submitted'
 
-            el.forEach (el) ->
-              bindings = pflock el, {answer}
+            el.each ->
+              bindings = pflock this, {answer}
               bindings.on 'changed', ->
                 data = bindings.data.answer
                 the.private_submit data, (ok) ->
