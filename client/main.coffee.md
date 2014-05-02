@@ -119,6 +119,7 @@ Hash-tag based routing
         base.empty()
 
         # Top menu: profile, logout
+        append_view base, 'profile'
         append_view base, 'welcome_text'
         append_view base, 'twitter_feeds'
 

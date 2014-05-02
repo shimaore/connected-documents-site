@@ -11,6 +11,27 @@ These functions are called with:
     request = require 'superagent'
 
     texts =
+      languages:
+        fr: 'Français'
+        en: 'English'
+      language:
+        fr: 'Langue'
+        en: 'Language'
+      name:
+        fr: 'Nom'
+        en: 'Name'
+      description:
+        fr: 'Bio'
+        en: 'Bio'
+      publish_profile:
+        fr: 'Publier mon profil'
+        en: 'Make my profile public'
+      publish_description:
+        fr: 'Publier ma bio'
+        en: 'Make my bio public'
+      publish_picture:
+        fr: 'Publier ma photo'
+        en: 'Make my picture public'
       logout:
         fr: 'Déconnexion'
         en: 'Log out'
@@ -61,7 +82,8 @@ Twitter feeds
       twitter_feeds: (the) ->
         if the.store.twitter_username? and the.store.twitter_widget_id?
           the.widget.each ->
-            window.twttr?.widgets.createTimeline the.store.twitter_widget_id, this, -> console.log 'timeline done'
+            el = this
+            window.twttr?.widgets.createTimeline the.store.twitter_widget_id, el, -> console.log 'timeline done'
 
 Questions
 =========
@@ -74,15 +96,14 @@ We only list questions a given user did not already submit.
 
         one_question = (el,q) =>
           # load the answer record
-          console.log "Loading answer record for #{q.question}"
           if q.language isnt the.user.language
-            return console.log "Skipping question, wrong language"
+            return console.log "Skipping question #{q.question}, wrong language"
           the.userdb.find 'answer', q.question, (answer) ->
-            console.log {answer}
             answer ?= {}
 
             if answer.submitted
-              return console.log "Question was already submitted"
+              console.log "Question was already submitted"
+              return
 
             input_html =
               switch q.answer_type
@@ -131,6 +152,87 @@ Content comments
 User Profile
 ============
 
+      profile: (the) ->
+        the.widget.html render ->
+          section class:'profile', ->
+            form ->
+              label ->
+                span texts.name[the.user.language]
+                input type:'text', 'x-bind':'value:/profile/name'
+              label ->
+                span texts.description[the.user.language]
+                input type:'text', 'x-bind':'value:/profile/description'
+              label ->
+                span texts.publish_profile[the.user.language]
+                input type:'checkbox', 'x-bind':'value:/profile/publish/profile'
+              label ->
+                span texts.publish_description[the.user.language]
+                input type:'checkbox', 'x-bind':'value:/profile/publish/description'
+              label ->
+                span texts.publish_picture[the.user.language]
+                input type:'checkbox', 'x-bind':'value:/profile/publish/picture'
+              label ->
+                img class:'picture', src:[the.userdb.name,'profile','picture'].join '/'
+                input type:'file', class:'picture'
+              label ->
+                span texts.language[the.user.language]
+                select 'x-bind':'value:/profile/language', ->
+                  for o, name of texts.languages
+                    option value:o, name
+              div class:'notification'
+              div class:'status'
+
+        the.widget.find('input.picture').on 'change', ->
+          selected_file = @files[0]
+          return unless selected_file?
+
+          if not selected_file.type.match /^image/
+            alert 'Please select an image' # FIXME
+
+          reader = new FileReader()
+
+          reader.onload = ->
+            attachment = reader.result
+            the.userdb.pouch.get 'profile'
+            .then (doc) ->
+              the.userdb.pouch.putAttachment 'profile', 'picture', doc._rev, reader.result, selected_file.type
+              .then (res) ->
+                if res.ok
+                  the.widget.find('img.picture').each ->
+                    @src = [the.userdb.name,'profile','picture'].join('/')+"?rev=#{res.rev}"
+              .catch (err) ->
+                console.log err
+                alert 'Failed, try again' # FIXME
+            .catch (err) ->
+              alert 'Failed, try again!' # FIXME
+
+          reader.readAsArrayBuffer selected_file
+
+        the.widget.find('form').each ->
+          el = this
+          status = $(el).find('.status')
+          clear_status = ->
+            status.removeClass('failed').removeClass('saved')
+          the.userdb.find 'profile', null, (profile) ->
+            profile ?= {}
+            profile.language ?= the.session.language
+            delete profile._attachments # prevents pflock from taking a long time to start
+
+            bindings = pflock el, {profile}
+            timer = null
+            bindings.on 'changed', ->
+              if timer? then clearTimeout timer
+              update = ->
+                status.addClass 'saving'
+                the.userdb.update 'profile', null, bindings.data.profile, (doc,old_doc) ->
+                  status.removeClass('saving').addClass if doc then 'saved' else 'failed'
+                  setTimeout clear_status, 10000
+
+                  bindings.toDocument {profile: doc ? old_doc}
+                  timer = null
+                  return
+              timer = setTimeout update, 1000
+
 Content submission
 ==================
 
@@ -150,7 +252,7 @@ Shows the login prompt and options to login using Facebook and Twitter.
                 span texts.password[the.user.language]
                 input type:'password', class:'password'
               input type:'submit', value:texts.login_submit[the.user.language]
-              div class:'.notification'
+              div class:'notification'
 
 Form submission for internal users.
 
@@ -194,7 +296,7 @@ Register widget
                 span texts.password[the.user.language]
                 input type:'password', class:'password'
               input type:'submit', value:texts.register_submit[the.user.language]
-              div class:'.notification'
+              div class:'notification'
 
 Form submission for internal users.
 
@@ -227,4 +329,4 @@ Form submission for internal users.
 Toolbox
 =======
 
-    {render,input,section,label,form,select,option,span,div,a,script,raw} = require 'teacup'
+    {render,input,section,label,img,form,select,option,span,div,a,script,raw} = require 'teacup'

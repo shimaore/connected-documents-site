@@ -36,7 +36,7 @@
     "jquery": "^2.1.0",
     "coffee-script": "^1.7.1",
     "supercouch": "^0.2.4",
-    "pflock-browserify": "0.6.4"
+    "pflock-browserify": "0.6.5"
   },
   "private": true,
   "dependencies": {

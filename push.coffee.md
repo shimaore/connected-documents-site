@@ -12,8 +12,11 @@
         db.putAttachment id, 'index.html', doc._rev, fs.readFileSync('test/index.html'), 'text/html', (err,res) ->
           if err then return console.log put1:err
           if res.ok and res.rev
-            db.putAttachment id, 'site.js', res.rev, fs.readFileSync('test/site.js'), 'application/javascript', (err,res) ->
-              if err then return console.log put2:err
+            db.putAttachment id, 'index.css', res.rev, fs.readFileSync('test/index.css'), 'text/css', (err,res) ->
+              if err then return console.log put1:err
               if res.ok and res.rev
-                console.log "OK"
+                db.putAttachment id, 'site.js', res.rev, fs.readFileSync('test/site.js'), 'application/javascript', (err,res) ->
+                  if err then return console.log put2:err
+                  if res.ok and res.rev
+                    console.log "OK"
 
