@@ -14,7 +14,6 @@ server.listen(port,function(request,response){
     page.viewportSize = { width:800, height:600 };
     setTimeout( function(){
       var content = page.renderBase64({format:'PNG',onlyViewport:true});
-      console.log(content);
       response.setHeader('Content-Type','application/json');
       response.write(JSON.stringify({content:content}));
       response.close();
