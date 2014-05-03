@@ -1,3 +1,4 @@
+    config = require '/usr/local/etc/proxy.json'
     PouchDB = require 'pouchdb'
 
     @include = ->
