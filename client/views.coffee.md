@@ -9,6 +9,7 @@ These functions are called with:
     pflock = require 'pflock-browserify'
     $ = require 'jquery'
     request = require 'superagent'
+    crypto = require 'crypto'
 
     texts =
       languages:
@@ -62,6 +63,18 @@ These functions are called with:
       register_failed: # User error
         fr: "Une erreur est survenue, veuillez ré-essayer"
         en: "Invalid email or password"
+      url_link:
+        fr: 'Lien URL'
+        en: 'URL link'
+      submit:
+        fr: 'Proposer'
+        en: 'Submit for review'
+      title:
+        fr: 'Titre'
+        en: 'Title'
+      author:
+        fr: 'Auteur'
+        en: 'Author'
 
 
     module.exports = widgets =
@@ -237,6 +250,60 @@ User Profile
 
 Content submission
 ==================
+
+      content_submission: (the) ->
+        the.widget.html render ->
+          section class:'content_submission', ->
+            form ->
+              label ->
+                span texts.url_link[the.user.language]
+                input type:'url', class:'url',  required:true
+              label ->
+                span texts.title[the.user.language]
+                input type:'text', class:'title', required:true
+              label ->
+                span texts.author[the.user.language]
+                input type:'text', class:'author', required:true
+              input type:'submit', value:texts.submit[the.user.language]
+              div class:'notification'
+              div class:'status'
+              img src:'/'
+
+        the.widget.find('form').each ->
+          el = this
+          status = $(el).find('.status')
+          $(el).find('.url').on 'focusout', ->
+            url = $(@).val()
+            request
+            .post '/_app/website-image'
+            .send {url}
+            .accept 'json'
+            .end (res) ->
+              if res.ok
+                $(el).find('img').attr 'src', "data:image/png;base64,#{res.body.content}"
+
+          $(el).submit (e) ->
+            e.preventDefault()
+            status.addClass 'saving'
+            h = crypto.createHash 'sha1'
+            h.update $(el).find('input.url').val()
+            uuid = h.digest 'hex'
+
+            doc =
+              type: 'content'
+              _id: "content:#{uuid}"
+              content: uuid
+              submitted_by: the.session.user
+
+              title: $(el).find('input.title').val()
+              author: $(el).find('input.author').val()
+              url: $(el).find('input.author').val()
+
+            the.shared_submit doc, (ok) ->
+              status.removeClass 'saving'
+              status.addClass if ok then 'saved' else 'failed'
+
+            return false
 
 Login widget
 ============

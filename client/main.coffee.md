@@ -128,6 +128,7 @@ Hash-tag based routing
         append_view base, 'questions'
 
         # Content suggestion: books (by title, author), URLs
+        append_view base, 'content_submission'
 
         # List bookshelves:
         # - my new books (recently purchased, currently reading)
