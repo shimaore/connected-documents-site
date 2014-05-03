@@ -21,9 +21,9 @@ The document is entirely validated by CouchDB, but we ensure that they are brand
 
         private_db
         .put doc
-        .then ->
+        .then =>
           @json ok:true
-        .catch (error) ->
+        .catch (error) =>
           @json {error}
 
 FIXME: figure out how to move attachments.
