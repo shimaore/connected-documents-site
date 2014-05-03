@@ -1,5 +1,6 @@
     config = require '/usr/local/etc/proxy.json'
     PouchDB = require 'pouchdb'
+    UUID = require 'uuid'
 
     @include = ->
 
@@ -15,7 +16,13 @@ Submit a document into the private database.
       @post '/_app/private_submit', [bodyParser], ->
         doc = @body
 
-The document is entirely validated by CouchDB, but we ensure that they are brand new ones.
+Ensure unicity by appending the user's UUID, unless they requested anonymity.
+(CouchDB may not validate some documents anonymously, which is expected.)
+
+        uuid = if doc.anonymous then UUID.v4() else session.user
+        doc._id = [doc._id,uuid].join ':'
+
+The document is normally validated by CouchDB, but we ensure that they are brand new ones.
 
         delete doc._rev
 
