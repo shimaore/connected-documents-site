@@ -19,7 +19,7 @@ Submit a document into the private database.
 Ensure unicity by appending the user's UUID, unless they requested anonymity.
 (CouchDB may not validate some documents anonymously, which is expected.)
 
-        uuid = if doc.anonymous then UUID.v4() else session.user
+        uuid = if doc.anonymous then UUID.v4() else @session.user
         doc._id = [doc._id,uuid].join ':'
 
 The document is normally validated by CouchDB, but we ensure that they are brand new ones.
