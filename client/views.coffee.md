@@ -132,6 +132,8 @@ We only list questions a given user did not already submit.
                   data.submitted = ok
                   the.userdb.update 'answer', q.question, data, (doc,old_doc) ->
                     bindings.toDocument {answer: doc ? old_doc}
+                    if doc?
+                      $(el).hide()
                     return
 
         the.shareddb.all 'question', (questions) ->
