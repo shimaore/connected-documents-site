@@ -33,14 +33,14 @@ Create context for views.
           .send data
           .timeout 1000
           .end (res) ->
-            cb res.ok
+            cb res.ok and res.body.ok
         private_submit: (data,cb) ->
           request
           .post '/_app/private_submit'
           .send data
           .timeout 1000
           .end (res) ->
-            cb res.ok
+            cb res.ok and res.body.ok
         user: {}
 
       set_language = (next) ->
