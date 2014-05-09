@@ -67,6 +67,8 @@ In the 'shared' database, only metadata of paid-for content is available.
 
     submitted_by: uuid of the user who submitted the content; null if store-provided
 
+    _attachment.thumbnail
+
     (price, ..)
 
 Attachments:

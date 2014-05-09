@@ -12,6 +12,8 @@
         console.log "PouchDB for #{@name}"
         @pouch = new PouchDB @name
 
+Add a (HoodieHQ-esque) type-based API to PouchDB.
+
       all: (type,cb) ->
         if type?
           @pouch.allDocs startkey: "#{type}:", endkey: "#{type};", include_docs: true, (err,res) ->

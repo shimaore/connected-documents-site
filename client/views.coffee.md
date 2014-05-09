@@ -1,8 +1,9 @@
 These functions are called with:
-`widget` -- a newly created component-dom `<div>` or other, empty at startup.
-`userdb` -- a db instance to the current user's db
-`shareddb` -- a db instance (read-only in most cases)
+`widget` -- a newly created jquery `<div>` or other, empty at startup.
+`userdb` -- a DB for the current user's db
+`shareddb` -- a DB for the shared db (read-only in most cases)
 `private_submit` -- save a document into the private database, callback receives true if success
+`shared_submit` -- save a document into the shared database, callback receives true if success
 `store` -- the `store` record in `shareddb` when online, `userdb` when offline
 `user` -- the `profile` record for the user (found in their `userdb`)
 
@@ -97,6 +98,9 @@ Twitter feeds
           the.widget.each ->
             el = this
             window.twttr?.widgets.createTimeline the.store.twitter_widget_id, el, -> console.log 'timeline done'
+
+"Like" Facebook button
+======================
 
 Questions
 =========
