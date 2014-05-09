@@ -122,47 +122,46 @@ One question
 
         # FIXME keep_anonymous
 
-        one_question = (el,q) =>
-          # load the answer record
-          if q.language isnt the.user.language
-            return console.log "Skipping question #{q.question}, wrong language"
-          the.userdb.find 'answer', q.question, (answer) ->
-            answer ?= {}
+        # load the answer record
+        if q.language isnt the.user.language
+          return console.log "Skipping question #{q.question}, wrong language"
+        the.userdb.find 'answer', q.question, (answer) ->
+          answer ?= {}
 
-            if answer.submitted
-              console.log "Question was already submitted"
-              return
+          if answer.submitted
+            console.log "Question was already submitted"
+            return
 
-            input_html =
-              switch q.answer_type
-                when 'boolean'
-                  render -> input type:'checkbox', 'x-bind':'value:/answer/content'
-                when 'string'
-                  render -> input 'x-bind':'value:/answer/content'
-                else
-                  render -> select 'x-bind': 'value:/answer/content', ->
-                    for o in q.answer_type
-                      option value:o, o
+          input_html =
+            switch q.answer_type
+              when 'boolean'
+                render -> input type:'checkbox', 'x-bind':'value:/answer/content'
+              when 'string'
+                render -> input 'x-bind':'value:/answer/content'
+              else
+                render -> select 'x-bind': 'value:/answer/content', ->
+                  for o in q.answer_type
+                    option value:o, o
 
-            el.html render ->
-              div '.question', ->
-                span q.text
-                raw input_html
-              div '.submitted', ->
-                span texts.submit_response[the.user.language]
-                input type:'checkbox', 'x-bind':'value:/answer/submitted'
+          el.html render ->
+            div '.question', ->
+              span q.text
+              raw input_html
+            div '.submitted', ->
+              span texts.submit_response[the.user.language]
+              input type:'checkbox', 'x-bind':'value:/answer/submitted'
 
-            el.each ->
-              bindings = pflock this, {answer}
-              bindings.on 'changed', ->
-                data = bindings.data.answer
-                the.private_submit data, (ok) ->
-                  data.submitted = ok
-                  the.userdb.update 'answer', q.question, data, (doc,old_doc) ->
-                    bindings.toDocument {answer: doc ? old_doc}
-                    if doc?
-                      $(el).hide()
-                    return
+          el.each ->
+            bindings = pflock this, {answer}
+            bindings.on 'changed', ->
+              data = bindings.data.answer
+              the.private_submit data, (ok) ->
+                data.submitted = ok
+                the.userdb.update 'answer', q.question, data, (doc,old_doc) ->
+                  bindings.toDocument {answer: doc ? old_doc}
+                  if doc?
+                    $(el).hide()
+                  return
 
 Shelves
 =======
