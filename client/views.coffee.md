@@ -208,7 +208,8 @@ Content Preview
             img src:[db.name,doc._id,'thumbnail'].join '/'
           span '.title', doc.title
           span '.author', doc.author
-          span '.url', a href:doc.url, texts.url_link[the.user.language]
+          span '.url', ->
+            a href:doc.url, texts.url_link[the.user.language]
 
 
 Content comments
