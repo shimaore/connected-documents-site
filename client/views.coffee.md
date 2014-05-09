@@ -167,8 +167,32 @@ One question
 Shelves
 =======
 
-Content
-=======
+      shelves: (the) ->
+        view =
+          map: (doc) ->
+            if doc.type is 'content' and doc.categories?
+              for category in doc.categories
+                emit category, null
+        the.userdb.pouch.add_view 'shelves/by_category', view, ->
+          the.userdb.pouch
+            .query 'shelves/by_category', include_docs: true, stale: 'update_after'
+            .then (res) ->
+              for row in res.rows
+                el = $ '<div/>'
+                the.widget.append el
+                widgets.content_preview the, el, row.doc
+
+Content Preview
+===============
+
+      content_preview: (the,el,doc) ->
+        el.html render ->
+          if doc._attachments.thumbnail?
+            img src:[the.userdb.name,doc._id,'thumbnail'].join '/'
+          span '.title', doc.title
+          span '.author', doc.author
+          span '.url', a href:doc.url, texts.url_link[the.user.language]
+
 
 Content comments
 ================

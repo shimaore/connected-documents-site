@@ -4,6 +4,10 @@
       else
         type
 
+Rewrite function into wrapped text (this works around some limitations in how CouchDB deals with JavaScript).
+
+    fun = (f) -> "(#{f})"
+
     PouchDB = require 'pouchdb'
 
     module.exports = class db
@@ -42,3 +46,24 @@ Add a (HoodieHQ-esque) type-based API to PouchDB.
             else
               new_doc._rev = res.rev
               cb? new_doc, old_doc
+
+Dynamically push design documents.
+
+      add_view: (name,{map,reduce},cb) ->
+        [design_doc,view_name] = name.split '/'
+        update = (doc) =>
+          doc.views ?= {}
+          view =
+            map: fun map
+          view.reduce = fun reduce if reduce?
+          doc._views[view_name] = view
+          @db
+            .put doc
+            .then cb
+
+        @db
+          .get "_design/#{design_doc}"
+          .then update
+          .catch (err) ->
+            # FIXME Assumes error is missing doc.
+            update _id: "_design/#{design_doc}"
