@@ -272,6 +272,7 @@ Content submission
         the.widget.find('form').each ->
           el = this
           status = $(el).find('.status')
+          thumbnail = null
           $(el).find('.url').on 'focusout', ->
             url = $(@).val()
             request
@@ -281,6 +282,7 @@ Content submission
             .end (res) ->
               if res.ok
                 $(el).find('img').attr 'src', "data:image/png;base64,#{res.body.content}"
+                thumbnail = res.body.content
 
           $(el).submit (e) ->
             e.preventDefault()
@@ -298,6 +300,13 @@ Content submission
               title: $(el).find('input.title').val()
               author: $(el).find('input.author').val()
               url: $(el).find('input.author').val()
+
+            if thumbnail?
+
+              doc._attachments =
+                thumbnail:
+                  content_type: 'image/png'
+                  data: thumbnail
 
             the.shared_submit doc, (ok) ->
               status.removeClass 'saving'
