@@ -130,10 +130,10 @@ We only list questions a given user did not already submit.
                       option value:o, o
 
             el.html render ->
-              div class:'question', ->
+              div '.question', ->
                 span q.text
                 raw input_html
-              div class:'submitted', ->
+              div '.submitted', ->
                 span texts.submit_response[the.user.language]
                 input type:'checkbox', 'x-bind':'value:/answer/submitted'
 
@@ -169,7 +169,7 @@ User Profile
 
       profile: (the) ->
         the.widget.html render ->
-          section class:'profile', ->
+          section '.profile', ->
             form ->
               label ->
                 span texts.name[the.user.language]
@@ -187,15 +187,15 @@ User Profile
                 span texts.publish_picture[the.user.language]
                 input type:'checkbox', 'x-bind':'value:/profile/publish/picture'
               label ->
-                img class:'picture', src:[the.userdb.name,'profile','picture'].join '/'
-                input type:'file', class:'picture'
+                img '.picture', src:[the.userdb.name,'profile','picture'].join '/'
+                input type:'file', '.picture'
               label ->
                 span texts.language[the.user.language]
                 select 'x-bind':'value:/profile/language', ->
                   for o, name of texts.languages
                     option value:o, name
-              div class:'notification'
-              div class:'status'
+              div '.notification'
+              div '.status'
 
         the.widget.find('input.picture').on 'change', ->
           selected_file = @files[0]
@@ -253,20 +253,20 @@ Content submission
 
       content_submission: (the) ->
         the.widget.html render ->
-          section class:'content_submission', ->
+          section '.content_submission', ->
             form ->
               label ->
                 span texts.url_link[the.user.language]
-                input type:'url', class:'url',  required:true
+                input '.url', type:'url', required:true
               label ->
                 span texts.title[the.user.language]
-                input type:'text', class:'title', required:true
+                input '.title', type:'text', required:true
               label ->
                 span texts.author[the.user.language]
-                input type:'text', class:'author', required:true
+                input '.author', type:'text', required:true
               input type:'submit', value:texts.submit[the.user.language]
-              div class:'notification'
-              div class:'status'
+              div '.notification'
+              div '.status'
               img src:'/'
 
         the.widget.find('form').each ->
@@ -312,16 +312,16 @@ Shows the login prompt and options to login using Facebook and Twitter.
 
       login: (the) ->
         the.widget.html render ->
-          section class:'login', ->
+          section '.login', ->
             form ->
               label ->
                 span texts.email[the.user.language]
-                input type:'email', class:'username'
+                input '.username', type:'email'
               label ->
                 span texts.password[the.user.language]
-                input type:'password', class:'password'
+                input '.password', type:'password'
               input type:'submit', value:texts.login_submit[the.user.language]
-              div class:'notification'
+              div '.notification'
 
 Form submission for internal users.
 
@@ -356,16 +356,16 @@ Register widget
 
       register: (the) ->
         the.widget.html render ->
-          section class:'register', ->
+          section '.register', ->
             form ->
               label ->
                 span texts.email[the.user.language]
-                input type:'email', class:'username'
+                input '.username', type:'email'
               label ->
                 span texts.password[the.user.language]
-                input type:'password', class:'password'
+                input '.password', type:'password'
               input type:'submit', value:texts.register_submit[the.user.language]
-              div class:'notification'
+              div '.notification'
 
 Form submission for internal users.
 
