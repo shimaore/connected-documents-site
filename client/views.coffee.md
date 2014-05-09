@@ -125,6 +125,7 @@ One question
         # load the answer record
         if q.language isnt the.user.language
           return console.log "Skipping question #{q.question}, wrong language"
+
         the.userdb.find 'answer', q.question, (answer) ->
           answer ?= {}
 
@@ -155,11 +156,12 @@ One question
             bindings = pflock this, {answer}
             bindings.on 'changed', ->
               data = bindings.data.answer
+              return unless data.submitted
               the.private_submit data, (ok) ->
                 data.submitted = ok
                 the.userdb.update 'answer', q.question, data, (doc,old_doc) ->
                   bindings.toDocument {answer: doc ? old_doc}
-                  if doc?
+                  if doc?.submitted
                     $(el).hide()
                   return
 
