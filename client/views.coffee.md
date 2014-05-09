@@ -105,6 +105,17 @@ We only list questions a given user did not already submit.
 
       questions: (the) ->
 
+        the.shareddb.all 'question', (questions) ->
+          for q in questions
+            el = $ '<div/>'
+            the.widget.append el
+            widgets.one_question the, el, q
+
+One question
+============
+
+      one_question: (the,el,q) ->
+
         # FIXME keep_anonymous
 
         one_question = (el,q) =>
@@ -148,12 +159,6 @@ We only list questions a given user did not already submit.
                     if doc?
                       $(el).hide()
                     return
-
-        the.shareddb.all 'question', (questions) ->
-          for q in questions
-            el = $ '<div/>'
-            the.widget.append el
-            one_question el, q
 
 Shelves
 =======
