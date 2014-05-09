@@ -332,7 +332,7 @@ Content submission
 
               title: $(el).find('input.title').val()
               author: $(el).find('input.author').val()
-              url: $(el).find('input.author').val()
+              url: $(el).find('input.url').val()
 
             if thumbnail?
 
