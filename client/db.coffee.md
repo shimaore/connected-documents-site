@@ -57,11 +57,11 @@ Dynamically push design documents.
             map: fun map
           view.reduce = fun reduce if reduce?
           doc._views[view_name] = view
-          @db
+          @pouch
             .put doc
             .then cb
 
-        @db
+        @pouch
           .get "_design/#{design_doc}"
           .then update
           .catch (err) ->
