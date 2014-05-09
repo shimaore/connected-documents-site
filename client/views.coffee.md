@@ -184,7 +184,7 @@ TODO: List by categories!!
               for row in res.rows
                 el = $ '<div/>'
                 the.widget.append el
-                widgets.content_preview the, el, row.doc
+                widgets.content_preview the, el, the.userdb, row.doc
 
 Shared Content
 ==============
@@ -197,15 +197,15 @@ This is content that can be freely added to my own shelves.
             for doc in docs
               el = $ '<div/>'
               the.widget.append el
-              widgets.content_preview the, el, doc
+              widgets.content_preview the, el, the.sharedb, doc
 
 Content Preview
 ===============
 
-      content_preview: (the,el,doc) ->
+      content_preview: (the,el,db,doc) ->
         el.html render ->
           if doc._attachments?.thumbnail?
-            img src:[the.userdb.name,doc._id,'thumbnail'].join '/'
+            img src:[db.name,doc._id,'thumbnail'].join '/'
           span '.title', doc.title
           span '.author', doc.author
           span '.url', a href:doc.url, texts.url_link[the.user.language]
