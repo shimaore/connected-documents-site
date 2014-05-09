@@ -197,7 +197,7 @@ This is content that can be freely added to my own shelves.
             for doc in docs
               el = $ '<div/>'
               the.widget.append el
-              widgets.content_preview the, el, the.sharedb, doc
+              widgets.content_preview the, el, the.shareddb, doc
 
 Content Preview
 ===============
