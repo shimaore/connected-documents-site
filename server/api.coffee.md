@@ -25,6 +25,7 @@
       @include './connect'
       @include './render'
       @include './private_submit'
+      @include './shared_submit'
 
 Language
 ========
