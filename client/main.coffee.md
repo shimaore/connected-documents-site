@@ -134,8 +134,10 @@ Hash-tag based routing
         # - my new books (recently purchased, currently reading)
         # - wishlist(s)
         # - recently suggested books (esp. ones pending reviews)
+        append_view base, 'shelves'
 
         # 
+        append_view base, 'shared_content'
 
       @get '/profile', ->
         # Currently only profile options are: publish_profile, pseudonym, picture, publish_picture flag, description ('about me")

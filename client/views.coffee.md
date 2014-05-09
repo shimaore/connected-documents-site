@@ -165,8 +165,8 @@ One question
                     $(el).hide()
                   return
 
-Shelves
-=======
+My Shelves
+==========
 
       shelves: (the) ->
         view =
@@ -178,10 +178,26 @@ Shelves
           the.userdb.pouch
             .query 'shelves/by_category', include_docs: true, stale: 'update_after'
             .then (res) ->
+
+TODO: List by categories!!
+
               for row in res.rows
                 el = $ '<div/>'
                 the.widget.append el
                 widgets.content_preview the, el, row.doc
+
+Shared Content
+==============
+
+This is content that can be freely added to my own shelves.
+
+      shared_content: (the) ->
+        the.shareddb
+          .all 'content', (docs) ->
+            for doc in docs
+              el = $ '<div/>'
+              the.widget.append el
+              widgets.content_preview the, el, doc
 
 Content Preview
 ===============
