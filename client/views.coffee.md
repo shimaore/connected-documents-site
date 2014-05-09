@@ -221,7 +221,7 @@ User Profile
                 input type:'checkbox', 'x-bind':'value:/profile/publish/picture'
               label ->
                 img '.picture', src:[the.userdb.name,'profile','picture'].join '/'
-                input type:'file', '.picture'
+                input '.picture', type:'file'
               label ->
                 span texts.language[the.user.language]
                 select 'x-bind':'value:/profile/language', ->
