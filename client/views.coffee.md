@@ -164,8 +164,8 @@ One question
             div '.question.form-group', ->
               raw input_html
             div '.submitted.form-group', ->
-              label texts.submit_response[the.user.language]
               input type:'checkbox', 'x-bind':'value:/answer/submitted'
+              label texts.submit_response[the.user.language]
 
           el.each ->
             bindings = pflock this, {answer}
