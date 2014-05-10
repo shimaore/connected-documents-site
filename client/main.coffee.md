@@ -93,10 +93,11 @@ Avoid showing a login prompt if we're not logged in.
 Append a view to the specific (component-dom) widget.
 
     append_view = (base_widget,view_name) ->
-      in_context (the) ->
-        the.widget = $ '<div/>'
-        base_widget.append the.widget
+      the_widget = $ '<div/>'
+      base_widget.append the_widget
 
+      in_context (the) ->
+        the.widget = the_widget
         if views[view_name]?
           console.log "Loading view #{view_name}"
           views[view_name] the
