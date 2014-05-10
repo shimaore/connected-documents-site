@@ -88,7 +88,8 @@ Texte administrable (welcome text)
 
       welcome_text: (the) ->
         if the.store.welcome_text?
-          the.widget.text the.store.welcome_text[the.user.language]
+          the.widget.html render ->
+            div '.color-grey.feed', the.store.welcome_text[the.user.language]
 
       logout: (the) ->
         the.widget.html render ->

@@ -11,6 +11,14 @@ body div.sensory {
 body div.tagline {
   margin-bottom: 90px;
   }
+
+.color-grey {
+  color: #3e3e40;
+}
+.color-pink {
+  color: #022058;
+}
+
 img.logo {
   width: 524px;
     max-width: 100%;
