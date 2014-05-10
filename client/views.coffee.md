@@ -90,6 +90,10 @@ Texte administrable (welcome text)
       logout: (the) ->
         the.widget.text the.store.logout[the.user.language]
 
+      top: (the) ->
+        the.widget.html render ->
+          img '.logo', src:"logo-#{the.user.language}.png"
+
 Twitter feeds
 =============
 
@@ -223,7 +227,7 @@ User Profile
       profile: (the) ->
         the.widget.html render ->
           section '.profile', ->
-            form ->
+            form '.form-profile', ->
               label '.input-group', ->
                 span texts.name[the.user.language]
                 input type:'text', 'x-bind':'value:/profile/name'

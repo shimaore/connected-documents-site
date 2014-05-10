@@ -119,7 +119,9 @@ Hash-tag based routing
         base.empty()
 
         # Top menu: profile, logout
+        append_view base, 'top'
         append_view base, 'profile'
+        append_view base, 'logout'
         append_view base, 'welcome_text'
         append_view base, 'twitter_feeds'
 
@@ -169,6 +171,7 @@ Hash-tag based routing
 
           base = $ 'body'
           base.empty()
+          append_view base, 'top'
           append_view base, 'login'
           append_view base, 'register'
           return

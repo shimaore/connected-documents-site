@@ -1,3 +1,21 @@
+body {
+  font-family: 'Quicksand', 'Gillius', "Gill Sans", sans;
+  font-weight: normal;
+  text-align: center;
+}
+
+body div.sensory {
+  font-size: 90px;
+  color: #333;
+  margin-top: 90px;
+}
+body div.tagline {
+  margin-bottom: 90px;
+  }
+img.logo {
+  width: 524px;
+    max-width: 100%;
+}
 
 img.picture {
   max-width: 100px;
@@ -28,6 +46,12 @@ img.thumbnail {
 }
 
 .form-register {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.form-profile {
   max-width: 330px;
   padding: 15px;
   margin: 0 auto;
