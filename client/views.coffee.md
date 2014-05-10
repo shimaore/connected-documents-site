@@ -231,18 +231,18 @@ User Profile
             form '.form-profile', role:'form', ->
               div '.form-group', ->
                 label texts.name[the.user.language]
-                input type:'text', 'x-bind':'value:/profile/name'
+                input '.form-control', type:'text', 'x-bind':'value:/profile/name'
               div '.form-group', ->
                 label texts.description[the.user.language]
-                textarea type:'text', 'x-bind':'/profile/description'
+                textarea '.form-control', type:'text', 'x-bind':'/profile/description'
               div '.form-group', ->
-                input type:'checkbox', 'x-bind':'value:/profile/publish/profile'
+                input '.form-control', type:'checkbox', 'x-bind':'value:/profile/publish/profile'
                 label texts.publish_profile[the.user.language]
               div '.form-group', ->
-                input type:'checkbox', 'x-bind':'value:/profile/publish/description'
+                input '.form-control', type:'checkbox', 'x-bind':'value:/profile/publish/description'
                 label texts.publish_description[the.user.language]
               div '.form-group', ->
-                input type:'checkbox', 'x-bind':'value:/profile/publish/picture'
+                input '.form-control', type:'checkbox', 'x-bind':'value:/profile/publish/picture'
                 label texts.publish_picture[the.user.language]
               div '.form-group', ->
                 if the.user._attachments?.picture?
@@ -252,7 +252,7 @@ User Profile
                 input '.picture', type:'file'
               div '.form-group', ->
                 label texts.language[the.user.language]
-                select 'x-bind':'value:/profile/language', ->
+                select '.form-control', 'x-bind':'value:/profile/language', ->
                   for o, name of texts.languages
                     option value:o, name
               div '.notification'
