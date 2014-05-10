@@ -206,6 +206,8 @@ Content Preview
         el.html render ->
           if doc._attachments?.thumbnail?
             img '.thumbnail', src:[db.name,doc._id,'thumbnail'].join '/'
+          else
+            img '.thumbnail', src:'coeur.png'
           span '.title', doc.title
           span '.author', doc.author
           span '.url', ->
@@ -318,7 +320,7 @@ Content submission
               input type:'submit', value:texts.submit[the.user.language]
               div '.notification'
               div '.status'
-              img '.thumbnail', src:'/'
+              img '.thumbnail', src:'coeur.png'
 
         the.widget.find('form').each ->
           el = this
