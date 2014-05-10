@@ -235,14 +235,14 @@ User Profile
               div '.form-group', ->
                 label texts.description[the.user.language]
                 textarea '.form-control', type:'text', 'x-bind':'/profile/description'
-              div '.form-group', ->
+              div '.checkbox', ->
                 input '.form-control', type:'checkbox', 'x-bind':'value:/profile/publish/profile'
                 label texts.publish_profile[the.user.language]
-              div '.form-group', ->
-                input '.form-control', type:'checkbox', 'x-bind':'value:/profile/publish/description'
+              div '.checkbox', ->
+                input type:'checkbox', 'x-bind':'value:/profile/publish/description'
                 label texts.publish_description[the.user.language]
-              div '.form-group', ->
-                input '.form-control', type:'checkbox', 'x-bind':'value:/profile/publish/picture'
+              div '.checkbox', ->
+                input type:'checkbox', 'x-bind':'value:/profile/publish/picture'
                 label texts.publish_picture[the.user.language]
               div '.form-group', ->
                 if the.user._attachments?.picture?
