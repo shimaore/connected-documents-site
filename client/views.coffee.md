@@ -119,7 +119,8 @@ We only list questions a given user did not already submit.
 
         the.shareddb.all 'question', (questions) ->
           for q in questions
-            el = $ '<div/>'
+            el = $ render ->
+              div '.form-question'
             the.widget.append el
             widgets.one_question the, el, q
 
@@ -144,20 +145,26 @@ One question
           input_html =
             switch q.answer_type
               when 'boolean'
-                render -> input type:'checkbox', 'x-bind':'value:/answer/content'
+                render ->
+                  input type:'checkbox', 'x-bind':'value:/answer/content'
+                  label q.text
               when 'string'
-                render -> input 'x-bind':'value:/answer/content'
+                render ->
+                  label q.text
+                  input '.form-control',
+                    type:'text', 'x-bind':'value:/answer/content'
               else
-                render -> select 'x-bind': 'value:/answer/content', ->
-                  for o in q.answer_type
-                    option value:o, o
+                render ->
+                  label q.text
+                  select 'x-bind': 'value:/answer/content', ->
+                    for o in q.answer_type
+                      option value:o, o
 
           el.html render ->
-            div '.question', ->
-              span q.text
+            div '.question.form-group', ->
               raw input_html
-            div '.submitted', ->
-              span texts.submit_response[the.user.language]
+            div '.submitted.form-group', ->
+              label texts.submit_response[the.user.language]
               input type:'checkbox', 'x-bind':'value:/answer/submitted'
 
           el.each ->

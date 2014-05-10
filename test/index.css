@@ -58,6 +58,12 @@ img.thumbnail {
   max-width: 540px;
   padding: 15px;
 }
+.form-question {
+  max-width: 540px;
+  padding: 15px;
+  border: solid thin pink;
+}
+
 .content-preview {
   max-width: 200px;
   padding: 6px;
