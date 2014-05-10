@@ -224,25 +224,25 @@ User Profile
         the.widget.html render ->
           section '.profile', ->
             form ->
-              label ->
+              label '.input-group', ->
                 span texts.name[the.user.language]
                 input type:'text', 'x-bind':'value:/profile/name'
-              label ->
+              label '.input-group', ->
                 span texts.description[the.user.language]
                 input type:'text', 'x-bind':'value:/profile/description'
-              label ->
-                span texts.publish_profile[the.user.language]
+              label '.input-group', ->
                 input type:'checkbox', 'x-bind':'value:/profile/publish/profile'
-              label ->
-                span texts.publish_description[the.user.language]
+                span texts.publish_profile[the.user.language]
+              label '.input-group', ->
                 input type:'checkbox', 'x-bind':'value:/profile/publish/description'
-              label ->
-                span texts.publish_picture[the.user.language]
+                span texts.publish_description[the.user.language]
+              label '.input-group', ->
                 input type:'checkbox', 'x-bind':'value:/profile/publish/picture'
-              label ->
+                span texts.publish_picture[the.user.language]
+              label '.input-group', ->
                 img '.picture', src:[the.userdb.name,'profile','picture'].join '/'
                 input '.picture', type:'file'
-              label ->
+              label '.input-group', ->
                 span texts.language[the.user.language]
                 select 'x-bind':'value:/profile/language', ->
                   for o, name of texts.languages
@@ -308,13 +308,13 @@ Content submission
         the.widget.html render ->
           section '.content_submission', ->
             form ->
-              label ->
+              label '.input-group', ->
                 span texts.url_link[the.user.language]
                 input '.url', type:'url', required:true
-              label ->
+              label '.input-group', ->
                 span texts.title[the.user.language]
                 input '.title', type:'text', required:true
-              label ->
+              label '.input-group', ->
                 span texts.author[the.user.language]
                 input '.author', type:'text', required:true
               input type:'submit', value:texts.submit[the.user.language]
