@@ -186,9 +186,17 @@ My Shelves
 
 TODO: List by categories!!
 
+              current_category = null
+              current_category_widget = null
+
               for row in res.rows
+                if current_category isnt row.key
+                  current_category = row.key
+                  current_category_widget = $ render -> div '.category'
+                  current_category_widget.append $ render -> h2 current_category
+                  the.widget.append current_category
                 el = $ '<div/>'
-                the.widget.append el
+                current_category.append el
                 widgets.content_preview the, el, the.userdb, row.doc
 
 Shared Content
