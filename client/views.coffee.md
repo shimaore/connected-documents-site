@@ -376,12 +376,14 @@ Shows the login prompt and options to login using Facebook and Twitter.
         the.widget.html render ->
           section '.login', ->
             form ->
-              label ->
-                span texts.email[the.user.language]
-                input '.username', type:'email'
-              label ->
-                span texts.password[the.user.language]
-                input '.password', type:'password'
+              label '.input-group.margin-bottom-sm', ->
+                # span texts.email[the.user.language]
+                span '.input-group-addon', -> i '.fa.fa-envelope-o.fa-fw'
+                input '.username.form-control', type:'email'
+              label '.input-group', ->
+                # span texts.password[the.user.language]
+                span '.input-group-addon', -> i '.fa.fa-key.fa-fw'
+                input '.password.form-control', type:'password'
               input type:'submit', value:texts.login_submit[the.user.language]
               div '.notification'
 
@@ -460,4 +462,4 @@ Form submission for internal users.
 Toolbox
 =======
 
-    {render,input,section,label,img,form,select,option,span,div,a,script,raw} = require 'teacup'
+    {render,input,section,label,i,img,form,select,option,span,div,a,script,raw} = require 'teacup'
