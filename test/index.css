@@ -72,3 +72,6 @@ img.thumbnail {
 .content-preview {
   display: inline-block;
 }
+.content-items {
+  display: inline-block;
+}
