@@ -221,14 +221,18 @@ Content Preview
 
       content_preview: (the,el,db,doc) ->
         el.html render ->
-          if doc._attachments?.thumbnail?
-            img '.thumbnail', src:[db.name,doc._id,'thumbnail'].join '/'
-          else
-            img '.thumbnail', src:'coeur.png'
-          span '.title', doc.title
-          span '.author', doc.author
-          span '.url', ->
-            a href:doc.url, texts.url_link[the.user.language]
+          div '.content-preview', ->
+            a href:doc.url,
+              if doc._attachments?.thumbnail?
+                img '.thumbnail', src:[db.name,doc._id,'thumbnail'].join '/'
+              else
+                img '.thumbnail', src:'coeur.png'
+            div '.title', ->
+              i '.fa.fa-book'
+              span doc.title
+            div '.author', ->
+              i '.fa.fa-pencil'
+              span doc.author
 
 
 Content comments

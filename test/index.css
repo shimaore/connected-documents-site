@@ -54,7 +54,11 @@ img.thumbnail {
   max-width: 540px;
   padding: 15px;
 }
-.form-submission{
+.form-submission {
   max-width: 540px;
   padding: 15px;
+}
+.content-preview {
+  max-width: 200px;
+  padding: 6px;
 }
