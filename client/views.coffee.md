@@ -88,7 +88,8 @@ Texte administrable (welcome text)
           the.widget.text the.store.welcome_text[the.user.language]
 
       logout: (the) ->
-        the.widget.text the.store.logout[the.user.language]
+        the.widget.html render ->
+          a href:'#/logout', text.logout[the.user.language]
 
       top: (the) ->
         the.widget.html render ->
@@ -476,4 +477,4 @@ Form submission for internal users.
 Toolbox
 =======
 
-    {render,input,section,label,i,img,form,select,option,span,div,a,script,raw} = require 'teacup'
+    {render,input,textarea,section,label,i,img,form,select,option,span,div,a,script,raw} = require 'teacup'
