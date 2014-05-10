@@ -199,7 +199,8 @@ TODO: List by categories!!
                   current_category_widget.append $ render ->
                     div '.category-header', current_category
                   the.widget.append current_category
-                el = $ '<div/>'
+                el = $ render ->
+                  div '.row'
                 current_category.append el
                 widgets.content_preview the, el, the.userdb, row.doc
 
@@ -214,7 +215,8 @@ This is content that can be freely added to my own shelves.
             the.widget.append $ render ->
               div '.category-header', texts.shared_content[the.user.language]
             for doc in docs
-              el = $ '<div/>'
+              el = $ render ->
+                div '.row'
               the.widget.append el
               widgets.content_preview the, el, the.shareddb, doc
 
@@ -223,7 +225,7 @@ Content Preview
 
       content_preview: (the,el,db,doc) ->
         el.html render ->
-          div '.content-preview', ->
+          div '.content-preview.col-md-1', ->
             a href:doc.url, ->
               if doc._attachments?.thumbnail?
                 img '.thumbnail', src:[db.name,doc._id,'thumbnail'].join '/'
