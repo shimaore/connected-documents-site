@@ -245,7 +245,10 @@ User Profile
                 input type:'checkbox', 'x-bind':'value:/profile/publish/picture'
                 span texts.publish_picture[the.user.language]
               label '.input-group', ->
-                img '.picture', src:[the.userdb.name,'profile','picture'].join '/'
+                if the.user._attachment.picture?
+                  img '.picture', src:[the.userdb.name,'profile','picture'].join '/'
+                else
+                  img '.picture', src:'coeur.png'
                 input '.picture', type:'file'
               label '.input-group', ->
                 span texts.language[the.user.language]
