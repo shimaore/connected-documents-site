@@ -65,6 +65,10 @@ img.thumbnail {
 
 .category-header {
   clear: both;
-  font-size: 1.2ex;
+  font-size: 18px;
   border-bottom: solid thin black;
+}
+
+.content-preview {
+  display: inline-block;
 }
