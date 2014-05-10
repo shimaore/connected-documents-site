@@ -321,6 +321,7 @@ Content submission
                 label texts.url_link[the.user.language]
                 input '.url.form-control',
                   type:'url', required:true
+                img '.thumbnail', src:'coeur.png'
               div '.form-group', ->
                 label texts.title[the.user.language]
                 input '.title.form-control',
@@ -333,7 +334,6 @@ Content submission
                 type:'submit', value:texts.submit[the.user.language]
               div '.notification'
               div '.status'
-              img '.thumbnail', src:'coeur.png'
 
         the.widget.find('form').each ->
           el = this
