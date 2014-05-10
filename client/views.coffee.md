@@ -205,7 +205,7 @@ Content Preview
       content_preview: (the,el,db,doc) ->
         el.html render ->
           if doc._attachments?.thumbnail?
-            img src:[db.name,doc._id,'thumbnail'].join '/'
+            img '.thumbnail', src:[db.name,doc._id,'thumbnail'].join '/'
           span '.title', doc.title
           span '.author', doc.author
           span '.url', ->
@@ -318,7 +318,7 @@ Content submission
               input type:'submit', value:texts.submit[the.user.language]
               div '.notification'
               div '.status'
-              img src:'/'
+              img '.thumbnail', src:'/'
 
         the.widget.find('form').each ->
           el = this
@@ -332,7 +332,7 @@ Content submission
             .accept 'json'
             .end (res) ->
               if res.ok
-                $(el).find('img').attr 'src', "data:image/png;base64,#{res.body.content}"
+                $(el).find('img.thumbnail').attr 'src', "data:image/png;base64,#{res.body.content}"
                 thumbnail = res.body.content
 
           $(el).submit (e) ->
