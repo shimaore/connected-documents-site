@@ -233,7 +233,7 @@ User Profile
                 input type:'text', 'x-bind':'value:/profile/name'
               label '.input-group', ->
                 span texts.description[the.user.language]
-                input type:'text', 'x-bind':'value:/profile/description'
+                textarea type:'text', 'x-bind':'/profile/description'
               label '.input-group', ->
                 input type:'checkbox', 'x-bind':'value:/profile/publish/profile'
                 span texts.publish_profile[the.user.language]
