@@ -89,7 +89,7 @@ Texte administrable (welcome text)
 
       logout: (the) ->
         the.widget.html render ->
-          a href:'#/logout', text.logout[the.user.language]
+          a href:'#/logout', texts.logout[the.user.language]
 
       top: (the) ->
         the.widget.html render ->
