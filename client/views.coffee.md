@@ -76,6 +76,9 @@ These functions are called with:
       author:
         fr: 'Auteur'
         en: 'Author'
+      shared_content:
+        fr: 'Contenu partagé'
+        en: 'Shared content'
 
 
     module.exports = widgets =
@@ -207,6 +210,7 @@ This is content that can be freely added to my own shelves.
       shared_content: (the) ->
         the.shareddb
           .all 'content', (docs) ->
+            the.widget.append $ render -> h2 texts.shared_content[the.user.language]
             for doc in docs
               el = $ '<div/>'
               the.widget.append el
