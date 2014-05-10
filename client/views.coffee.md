@@ -231,12 +231,13 @@ User Profile
             form '.form-profile', role:'form', ->
               div '.form-group', ->
                 label texts.name[the.user.language]
-                input '.form-control', type:'text', 'x-bind':'value:/profile/name'
+                input '.form-control',
+                  type:'text', 'x-bind':'value:/profile/name'
               div '.form-group', ->
                 label texts.description[the.user.language]
-                textarea '.form-control', type:'text', 'x-bind':'/profile/description'
+                textarea '.form-control', 'x-bind':'/profile/description'
               div '.checkbox', ->
-                input '.form-control', type:'checkbox', 'x-bind':'value:/profile/publish/profile'
+                input type:'checkbox', 'x-bind':'value:/profile/publish/profile'
                 label texts.publish_profile[the.user.language]
               div '.checkbox', ->
                 input type:'checkbox', 'x-bind':'value:/profile/publish/description'
@@ -315,17 +316,21 @@ Content submission
       content_submission: (the) ->
         the.widget.html render ->
           section '.content_submission', ->
-            form ->
-              label '.input-group', ->
-                span texts.url_link[the.user.language]
-                input '.url', type:'url', required:true
-              label '.input-group', ->
-                span texts.title[the.user.language]
-                input '.title', type:'text', required:true
-              label '.input-group', ->
-                span texts.author[the.user.language]
-                input '.author', type:'text', required:true
-              input type:'submit', value:texts.submit[the.user.language]
+            form '.form-submission', ->
+              div '.form-group', ->
+                label texts.url_link[the.user.language]
+                input '.url.form-control',
+                  type:'url', required:true
+              div '.form-group', ->
+                label texts.title[the.user.language]
+                input '.title.form-control',
+                  type:'text', required:true
+              div '.form-group', ->
+                label texts.author[the.user.language]
+                input '.author.form-control',
+                  type:'text', required:true
+              input '.btn.btn-default',
+                type:'submit', value:texts.submit[the.user.language]
               div '.notification'
               div '.status'
               img '.thumbnail', src:'coeur.png'
