@@ -425,14 +425,20 @@ Register widget
       register: (the) ->
         the.widget.html render ->
           section '.register', ->
-            form ->
-              label ->
-                span texts.email[the.user.language]
-                input '.username', type:'email'
-              label ->
-                span texts.password[the.user.language]
-                input '.password', type:'password'
-              input type:'submit', value:texts.register_submit[the.user.language]
+            form '.form-register', ->
+              label '.input-group.margin-bottom-sm', ->
+                span '.input-group-addon', -> i '.fa.fa-envelope-o.fa-fw'
+                input '.username.form-control',
+                  type:'email'
+                  placeholder:texts.email[the.user.language]
+              label '.input-group', ->
+                span '.input-group-addon', -> i '.fa.fa-key.fa-fw'
+                input '.password.form-control',
+                  type:'password'
+                  placeholder:texts.password[the.user.language]
+              input '.btn.btn-lg.btn-primary.btn-block',
+                type:'submit'
+                value:texts.register_submit[the.user.language]
               div '.notification'
 
 Form submission for internal users.
