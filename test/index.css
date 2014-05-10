@@ -52,7 +52,6 @@ img.thumbnail {
 }
 
 .form-profile {
-  max-width: 330px;
+  max-width: 540px;
   padding: 15px;
-  margin: 0 auto;
 }
