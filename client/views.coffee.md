@@ -196,7 +196,8 @@ TODO: List by categories!!
                 if current_category isnt row.key
                   current_category = row.key
                   current_category_widget = $ render -> div '.category'
-                  current_category_widget.append $ render -> h2 current_category
+                  current_category_widget.append $ render ->
+                    div '.category-header', current_category
                   the.widget.append current_category
                 el = $ '<div/>'
                 current_category.append el
@@ -210,7 +211,8 @@ This is content that can be freely added to my own shelves.
       shared_content: (the) ->
         the.shareddb
           .all 'content', (docs) ->
-            the.widget.append $ render -> h2 texts.shared_content[the.user.language]
+            the.widget.append $ render ->
+              div '.category-header', texts.shared_content[the.user.language]
             for doc in docs
               el = $ '<div/>'
               the.widget.append el

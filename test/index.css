@@ -62,3 +62,9 @@ img.thumbnail {
   max-width: 200px;
   padding: 6px;
 }
+
+.category-header {
+  clear: both;
+  font-size: 1.2ex;
+  border-bottom: solid thin black;
+}
