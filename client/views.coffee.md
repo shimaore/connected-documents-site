@@ -224,7 +224,7 @@ Content Preview
       content_preview: (the,el,db,doc) ->
         el.html render ->
           div '.content-preview', ->
-            a href:doc.url,
+            a href:doc.url, ->
               if doc._attachments?.thumbnail?
                 img '.thumbnail', src:[db.name,doc._id,'thumbnail'].join '/'
               else
