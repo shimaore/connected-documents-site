@@ -74,4 +74,6 @@ img.thumbnail {
 }
 .content-items {
   display: inline-block;
+  min-width: 20%;
+  max-width: 21%;
 }
