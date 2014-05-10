@@ -71,7 +71,10 @@ img.thumbnail {
   padding: 15px;
   border: solid thin pink;
 }
-
+.welcome {
+  padding: 1em;
+  font-size: 18px;
+}
 .content-preview {
   max-width: 200px;
   padding: 6px;
