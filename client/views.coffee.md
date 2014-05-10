@@ -228,29 +228,29 @@ User Profile
       profile: (the) ->
         the.widget.html render ->
           section '.profile', ->
-            form '.form-profile', ->
-              label '.input-group', ->
+            form '.form-profile.form-horizontal', role:'form', ->
+              label '.form-group', ->
                 span texts.name[the.user.language]
                 input type:'text', 'x-bind':'value:/profile/name'
-              label '.input-group', ->
+              label '.form-group', ->
                 span texts.description[the.user.language]
                 textarea type:'text', 'x-bind':'/profile/description'
-              label '.input-group', ->
+              label '.form-group', ->
                 input type:'checkbox', 'x-bind':'value:/profile/publish/profile'
                 span texts.publish_profile[the.user.language]
-              label '.input-group', ->
+              label '.form-group', ->
                 input type:'checkbox', 'x-bind':'value:/profile/publish/description'
                 span texts.publish_description[the.user.language]
-              label '.input-group', ->
+              label '.form-group', ->
                 input type:'checkbox', 'x-bind':'value:/profile/publish/picture'
                 span texts.publish_picture[the.user.language]
-              label '.input-group', ->
+              label '.form-group', ->
                 if the.user._attachments?.picture?
                   img '.picture', src:[the.userdb.name,'profile','picture'].join '/'
                 else
                   img '.picture', src:'coeur.png'
                 input '.picture', type:'file'
-              label '.input-group', ->
+              label '.form-group', ->
                 span texts.language[the.user.language]
                 select 'x-bind':'value:/profile/language', ->
                   for o, name of texts.languages
