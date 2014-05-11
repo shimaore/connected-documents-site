@@ -93,33 +93,37 @@ Main body for `create_user_account`
       user_db = new PouchDB [config.base_url,"user-#{uuid}"].join '/'
       # TODO initial replication ?
 
-      user_db.get 'profile', (error,doc) ->
-        # Shortcut the case this was created fine.
-        if doc?.uuid?
-          next null
+      user_db.catch (error) ->
+        next error
 
-        user_db_security =
-          members:
-            names: [username]
-            roles: ['userdb_reader','userdb_writer']
-
-        request
-        .put [config.base_url,"user-#{uuid}",'_security'].join '/'
-        .send user_db_security
-        .end (res) ->
-          if not res.ok then return next user_db_security_put:res.text
-
-          my_profile =
-            _id: 'profile'
-            uuid: uuid
-            username: username
-
-          user_db
-          .put my_profile
-          .then ->
+      user_db.then ->
+        user_db.get 'profile', (error,doc) ->
+          # Shortcut the case this was created fine.
+          if doc?.uuid?
             next null
-          .catch (error) ->
-            next user_db_put:error
+
+          user_db_security =
+            members:
+              names: [username]
+              roles: ['userdb_reader','userdb_writer']
+
+          request
+          .put [config.base_url,"user-#{uuid}",'_security'].join '/'
+          .send user_db_security
+          .end (res) ->
+            if not res.ok then return next user_db_security_put:res.text
+
+            my_profile =
+              _id: 'profile'
+              uuid: uuid
+              username: username
+
+            user_db
+            .put my_profile
+            .then ->
+              next null
+            .catch (error) ->
+              next user_db_put:error
 
     send_validation_email = (username,next) ->
       # TODO implement
