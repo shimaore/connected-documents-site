@@ -78,7 +78,7 @@ We authenticate using Facebook; our internal username starts with "facebook:".
         clientSecret: config.facebook_app_secret
         callbackURL: "#{config.public_url}/_app/facebook-connect/callback"
         (accessToken, refreshToken, profile, done) ->
-          done null, "facebook:#{profile.id}"
+          done null, "facebook-#{profile.id}"
 
       @get '/_app/facebook-connect', passport.authenticate 'facebook' # , scope:'email'
 
@@ -96,12 +96,15 @@ We authenticate using Facebook; our internal username starts with "facebook:".
 
           create_user_account {username,validated:true}, (error,uuid) =>
             if error
+              console.dir error
               return @redirect "#{return_url}?#{qs.stringify {error}}"
 
             @session.name = username
             @session.user = uuid
             @session.roles = ['user']
             @session.token = make_token @session
+
+            console.dir @session
 
             @redirect "#{return_url}?#{qs.stringify {uuid,ok:true}}"
 
