@@ -436,9 +436,9 @@ Shows the login prompt and options to login using Facebook and Twitter.
                   i '.fa.fa-square-o.fa-stack-2x'
                   i '.fa.fa-facebook.fa-stack-1x'
               a href:'/_app/twitter-connect', ->
-                span '.facebook-login.btn.btn-lg.btn-primary.btn-block.fa-stack.fa-lg', ->
+                span '.twitter-login.btn.btn-lg.btn-primary.btn-block.fa-stack.fa-lg', ->
                   i '.fa.fa-square-o.fa-stack-2x'
-                  i '.fa.fa-facebook.fa-stack-1x'
+                  i '.fa.fa-twitter.fa-stack-1x'
 
 Form submission for internal users.
 
