@@ -95,12 +95,15 @@ We authenticate using Facebook; our internal username starts with "facebook:".
             return @redirect "#{return_url}?#{qs.stringify error:'failed'}"
 
           create_user_account {username,validated:true}, (error,uuid) =>
+            if error
+              return @redirect "#{return_url}?#{qs.stringify {error}}"
+
             @session.name = username
             @session.user = uuid
             @session.roles = ['user']
             @session.token = make_token @session
 
-            return @redirect "#{return_url}?#{qs.stringify {uuid,ok:true}}"
+            @redirect "#{return_url}?#{qs.stringify {uuid,ok:true}}"
 
         (passport.authenticate 'facebook', handler)(@req,@res,@next)
 
