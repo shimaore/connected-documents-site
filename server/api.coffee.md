@@ -84,7 +84,7 @@ We authenticate using Facebook; our internal username starts with "facebook:".
         handler = (error,username,info) =>
           console.dir {error,username,info}
 
-          if err
+          if error
             return @json {error}
 
           if not username
