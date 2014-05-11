@@ -12,8 +12,6 @@ These functions are called with:
     request = require 'superagent'
     crypto = require 'crypto'
 
-    facebook = require './facebook.coffee.md'
-
     texts =
       languages:
         fr: 'Français'
@@ -433,11 +431,28 @@ Shows the login prompt and options to login using Facebook and Twitter.
                 type:'submit'
                 value:texts.login_submit[the.user.language]
               div '.notification'
-              span '.facebook-login.btn.btn-lg.btn-primary.btn-block.fa-stack.fa-lg', ->
-                i '.fa.fa-square-o.fa-stack-2x'
-                i '.fa.fa-facebook.fa-stack-1x'
+              a href:'/_app/facebook-connect', ->
+                span '.facebook-login.btn.btn-lg.btn-primary.btn-block.fa-stack.fa-lg', ->
+                  i '.fa.fa-square-o.fa-stack-2x'
+                  i '.fa.fa-facebook.fa-stack-1x'
+              a href:'/_app/twitter-connect', ->
+                span '.facebook-login.btn.btn-lg.btn-primary.btn-block.fa-stack.fa-lg', ->
+                  i '.fa.fa-square-o.fa-stack-2x'
+                  i '.fa.fa-facebook.fa-stack-1x'
 
 Form submission for internal users.
+
+        connect_handler = (res) ->
+          if not res.ok
+            the.widget.find('.notification').text texts.login_error[the.user.language]
+            return
+
+          if not res.body.ok
+            the.widget.find('.notification').text texts.login_failed[the.user.language]
+            return
+
+          the.session.user = res.body.uuid
+          the.router.dispatch ''
 
         the.widget.on 'submit', 'form', (e) ->
           console.log 'submit login form'
@@ -449,41 +464,8 @@ Form submission for internal users.
           .post '/_app/local-connect'
           .accept 'json'
           .send auth
-          .end (res) ->
-            if not res.ok
-              the.widget.find('.notification').text texts.login_error[the.user.language]
-              return
-
-            if not res.body.ok
-              the.widget.find('.notification').text texts.login_failed[the.user.language]
-              return
-
-            the.session.user = res.body.uuid
-            the.router.dispatch ''
-
+          .end connect_handler
           return false
-
-Facebook handling
-
-        the.widget.find('.facebook-login').click -> facebook the.store, (FB) ->
-          login_handler = (response) ->
-            # contains accessToken, expiresIn, signedRequest, userID
-            console.log {response}
-            if not response.authResponse
-              console.log 'User cancelled login or did not fully authorize.'
-              return
-
-            console.log 'Welcome!  Fetching your information.... '
-            FB.api '/me',  (response) ->
-              # contains email, first_name, gender, id, last_name, link, locale, name, timezone, update_time, verified
-              console.log "Good to see you, #{response.name} ."
-              console.log {response}
-
-              # TODO call /_app/facebook-connect etc.
-
-FIXME: Do we need the data from `public_profile`? See https://developers.facebook.com/docs/facebook-login/permissions
-
-          FB.login login_handler, scope:'email' # do we need public_profile?
 
         console.log "View login is ready"
 

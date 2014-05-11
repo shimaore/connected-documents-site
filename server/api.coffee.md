@@ -68,15 +68,28 @@ Facebook connect
 
 We authenticate using Facebook; our internal username starts with "facebook:".
 
-      @post '/_app/facebook-connect', [bodyParser], ->
+      passport = require 'passport'
+      FacebookStrategy = (require 'passport-facebook').Strategy
 
-        username = @body.authResponse.userID
+      passport.use new FacebookStrategy
+        clientID: config.facebook_app_id
+        clientSecret: config.facebook_app_secret
+        callbackURL: "#{config.public_url}/_app/facebook-connect/callback"
+        (accessToken, refreshToken, profile, done) ->
+          done null, "facebook:#{profile.id}"
 
-        # pas besoin de mail de validation
-        @facebook_connect (ok) =>
-          if not ok then return @json error:'failed'
+      @get '/_app/facebook-connect', passport.authenticate 'facebook' # , scope:'email'
 
-          username = "facebook:#{twitter_userid}"
+      @get '/_app/facebook-connect/callback', ->
+        handler = (error,username,info) =>
+          console.dir {error,username,info}
+
+          if err
+            return @json {error}
+
+          if not username
+            return @json error:'failed'
+
           create_user_account {username,validated:true}, (error,uuid) =>
             @session.name = username
             @session.user = uuid
@@ -86,6 +99,8 @@ We authenticate using Facebook; our internal username starts with "facebook:".
             @json
               ok: true
               uuid: uuid
+
+        (passport.authenticate 'facebook', handler)(@req,@res,@next)
 
 Local connect
 =============
