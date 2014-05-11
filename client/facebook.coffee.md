@@ -5,13 +5,13 @@ Facebook login
     loaded = false
     ready = false
 
-    module.exports = (cb) ->
+    module.exports = (store,cb) ->
       $ ->
         if ready then return cb window.FB
 
         window.fbAsyncInit = ->
           window.FB.init
-            appId      : the.store.facebook_app_id
+            appId      : store.facebook_app_id
             xfbml      : true
             version    : 'v2.0'
           ready = true

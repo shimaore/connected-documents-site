@@ -465,8 +465,9 @@ Form submission for internal users.
 
 Facebook handling
 
-        the.widget.find('.facebook-login').click -> facebook (FB) ->
+        the.widget.find('.facebook-login').click -> facebook (the.store,FB) ->
           login_handler = (response) ->
+            # contains accessToken, expiresIn, signedRequest, userID
             console.log {response}
             if not response.authResponse
               console.log 'User cancelled login or did not fully authorize.'
@@ -474,6 +475,7 @@ Facebook handling
 
             console.log 'Welcome!  Fetching your information.... '
             FB.api '/me',  (response) ->
+              # contains email, first_name, gender, id, last_name, link, locale, name, timezone, update_time, verified
               console.log "Good to see you, #{response.name} ."
               console.log {response}
 
