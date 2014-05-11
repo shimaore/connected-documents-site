@@ -35,7 +35,6 @@ Create user record in `auth_db`
           user_record =
             type: 'user'
             _id: auth_id
-            _rev: doc?._rev
             name: username
             password: password
             validated: validated ? false
@@ -43,6 +42,8 @@ Create user record in `auth_db`
             roles: [
               'user'
             ]
+          if doc?._rev?
+            user_record._rev = doc._rev
 
           # Create user record in auth
           auth_db
@@ -64,9 +65,11 @@ Main body for `create_user_account`
           if error? then return next create_user_db:error
 
           mark_created = (next) ->
-            auth_db.get auth_id, (error,doc) ->
-              if error? then return next auth_db_get:error
-
+            auth_db
+            .get auth_id
+            .catch (error) ->
+              next auth_db_get:error
+            .then (doc) ->
               doc.created = true
 
               auth_db
