@@ -465,7 +465,7 @@ Form submission for internal users.
 
 Facebook handling
 
-        the.widget.find('.facebook-login').click -> facebook (the.store,FB) ->
+        the.widget.find('.facebook-login').click -> facebook the.store, (FB) ->
           login_handler = (response) ->
             # contains accessToken, expiresIn, signedRequest, userID
             console.log {response}
