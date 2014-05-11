@@ -433,7 +433,7 @@ Shows the login prompt and options to login using Facebook and Twitter.
                 type:'submit'
                 value:texts.login_submit[the.user.language]
               div '.notification'
-              span '.facebook-login.fa-stack.fa-lg', ->
+              span '.facebook-login.btn.btn-lg.btn-primary.btn-block.fa-stack.fa-lg', ->
                 i '.fa.fa-square-o.fa-stack-2x'
                 i '.fa.fa-facebook.fa-stack-1x'
 
