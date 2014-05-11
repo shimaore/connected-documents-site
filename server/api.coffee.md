@@ -5,6 +5,8 @@
 
     acceptLanguage = require 'accept-language'
 
+    qs = require 'querystring'
+
     zappa config, ->
 
       acceptLanguage.codes config.languages
@@ -84,11 +86,13 @@ We authenticate using Facebook; our internal username starts with "facebook:".
         handler = (error,username,info) =>
           console.dir {error,username,info}
 
+          return_url = "#{config.public_url}/public/_design/site/index.html"
+
           if error
-            return @json {error}
+            return @redirect "#{return_url}?#{qs.stringify {error}}"
 
           if not username
-            return @json error:'failed'
+            return @redirect "#{return_url}?#{qs.stringify error:'failed'}"
 
           create_user_account {username,validated:true}, (error,uuid) =>
             @session.name = username
@@ -96,9 +100,7 @@ We authenticate using Facebook; our internal username starts with "facebook:".
             @session.roles = ['user']
             @session.token = make_token @session
 
-            @json
-              ok: true
-              uuid: uuid
+            return @redirect "#{return_url}?#{qs.stringify {uuid,ok:true}}"
 
         (passport.authenticate 'facebook', handler)(@req,@res,@next)
 
