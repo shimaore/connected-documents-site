@@ -63,8 +63,17 @@ Create context for views.
 Avoid showing a login prompt if we're not logged in.
 
       if not offline and not session.user?
-        console.log 'Avoiding database queries'
-        set_language cb
+
+Load the `store` data from the public database.
+
+        public_db = new DB "#{base}/public"
+        public_db.pouch.get 'store'
+        .then (doc) ->
+          the.store = doc
+          set_language cb
+        .catch (error) ->
+          console.log store:error
+          set_language cb
         return
 
       console.log "Loading for user #{session.user}"
