@@ -483,7 +483,8 @@ FIXME: Do we need the data from `public_profile`? See https://developers.faceboo
 
           FB.login login_handler, scope:'email' # do we need public_profile?
 
-        start_fb document, 'script', 'facebook-jssdk'
+        # start_fb document, 'script', 'facebook-jssdk'
+        $.getScript '//connect.facebook.net/en_US/sdk.js'
 
         console.log "View login is ready"
 
