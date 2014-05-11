@@ -458,6 +458,33 @@ Form submission for internal users.
 
           return false
 
+Facebook login
+
+        window.fbAsyncInit = ->
+          FB.init
+            appId      : the.store.facebook_app_id,
+            xfbml      : true,
+            version    : 'v2.0'
+
+          login_handler = (response) ->
+            console.log {response}
+            if not response.authResponse
+              console.log 'User cancelled login or did not fully authorize.'
+              return
+
+            console.log 'Welcome!  Fetching your information.... '
+            FB.api '/me',  (response) ->
+              console.log "Good to see you, #{response.name} ."
+              console.log {response}
+
+              # TODO call /_app/facebook-connect etc.
+
+FIXME: Do we need the data from `public_profile`? See https://developers.facebook.com/docs/facebook-login/permissions
+
+          FB.login login_handler, scope:'email' # do we need public_profile?
+
+        start_fb document, 'script', 'facebook-jssdk'
+
         console.log "View login is ready"
 
 Register widget
@@ -514,3 +541,11 @@ Toolbox
 =======
 
     {render,input,textarea,section,label,i,img,form,select,option,span,div,a,script,raw} = require 'teacup'
+
+    start_fb = (d, s, id) ->
+      fjs = d.getElementsByTagName(s)[0]
+      if d.getElementById(id) then return
+      js = d.createElement(s)
+      js.id = id
+      js.src = "//connect.facebook.net/en_US/sdk.js"
+      fjs.parentNode.insertBefore js, fjs
