@@ -1,6 +1,7 @@
     zappa = require 'zappajs'
     config = require '/usr/local/etc/proxy.json'
     crypto = require 'crypto'
+    passport = require 'passport'
     create_user_account = require './create_user_account'
 
     acceptLanguage = require 'accept-language'
@@ -43,34 +44,60 @@ Session
           user: @session.user
           roles: @session.roles
 
+Passport Authentication Callback URL Handler
+============================================
+
+      passport_callback = (strategy) ->
+        return ->
+          handler = (error,username,info) =>
+            console.dir {error,username,info}
+
+            return_url = "#{config.public_url}/public/_design/site/index.html"
+
+            if error
+              return @redirect "#{return_url}?#{qs.stringify {error}}"
+
+            if not username
+              return @redirect "#{return_url}?#{qs.stringify error:'failed'}"
+
+            create_user_account {username,validated:true}, (error,uuid) =>
+              if error
+                console.dir error
+                return @redirect "#{return_url}?#{qs.stringify {error}}"
+
+              @session.name = username
+              @session.user = uuid
+              @session.roles = ['user']
+              @session.token = make_token @session
+
+              console.dir @session
+
+              @redirect "#{return_url}?#{qs.stringify {uuid,ok:true}}"
+
+          (passport.authenticate strategy, handler)(@req,@res,@next)
+
 Twitter connect
 ===============
 
 We authenticate using Twitter; our internal username starts with "twitter:".
 
-      @post '/_app/twitter-connect', [bodyParser], ->
+      TwitterStrategy = (require 'passport-twitter').Strategy
 
-        # pas besoin de mail de validation
-        @twitter_connect (ok) =>
-          if not ok then return @json error:'failed'
+      passport.use new TwitterStrategy
+        consumerKey: config.twitter_consumer_key
+        consumerSecret: config.twitter_consumer_secret
+        callbackURL: "#{config.public_url}/_app/twitter-connect/callback"
+        (accessToken, refreshToken, profile, done) ->
+          done null, "twitter-#{profile.id}"
 
-          username = "twitter:#{twitter_userid}"
-          create_user_account {username,validated:true}, (error,uuid) =>
-            @session.name = username
-            @session.user = uuid
-            @session.roles = ['user']
-            @session.token = make_token @session
-
-            @json
-              ok: true
-              uuid: uuid
+      @get '/_app/twitter-connect', passport.authenticate 'twitter'
+      @get '/_app/twitter-connect/callback', passport_callback 'twitter'
 
 Facebook connect
 ================
 
 We authenticate using Facebook; our internal username starts with "facebook:".
 
-      passport = require 'passport'
       FacebookStrategy = (require 'passport-facebook').Strategy
 
       passport.use new FacebookStrategy
@@ -81,34 +108,7 @@ We authenticate using Facebook; our internal username starts with "facebook:".
           done null, "facebook-#{profile.id}"
 
       @get '/_app/facebook-connect', passport.authenticate 'facebook' # , scope:'email'
-
-      @get '/_app/facebook-connect/callback', ->
-        handler = (error,username,info) =>
-          console.dir {error,username,info}
-
-          return_url = "#{config.public_url}/public/_design/site/index.html"
-
-          if error
-            return @redirect "#{return_url}?#{qs.stringify {error}}"
-
-          if not username
-            return @redirect "#{return_url}?#{qs.stringify error:'failed'}"
-
-          create_user_account {username,validated:true}, (error,uuid) =>
-            if error
-              console.dir error
-              return @redirect "#{return_url}?#{qs.stringify {error}}"
-
-            @session.name = username
-            @session.user = uuid
-            @session.roles = ['user']
-            @session.token = make_token @session
-
-            console.dir @session
-
-            @redirect "#{return_url}?#{qs.stringify {uuid,ok:true}}"
-
-        (passport.authenticate 'facebook', handler)(@req,@res,@next)
+      @get '/_app/facebook-connect/callback', passport_callback 'facebook'
 
 Local connect
 =============
