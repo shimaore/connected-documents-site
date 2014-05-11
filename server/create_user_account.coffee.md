@@ -97,10 +97,11 @@ Main body for `create_user_account`
         next user_db_create:error
 
       user_db.then ->
-        user_db.get 'profile', (error,doc) ->
+        user_db
+        .get 'profile', (doc) ->
           # Shortcut the case this was created fine.
-          if doc?.uuid?
-            next null
+          next null
+        .catch (error) ->
 
           user_db_security =
             members:
