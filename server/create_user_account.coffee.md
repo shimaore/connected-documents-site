@@ -51,7 +51,7 @@ Create user record in `auth_db`
           .then ->
             next null, uuid:uuid, created:false, validated:user_record.validated
           .catch (error) ->
-            next auth_db_put:error, {}
+            next auth_db_user_put:error, {}
 
 Main body for `create_user_account`
 ===================================
@@ -94,7 +94,7 @@ Main body for `create_user_account`
       # TODO initial replication ?
 
       user_db.catch (error) ->
-        next error
+        next user_db_create:error
 
       user_db.then ->
         user_db.get 'profile', (error,doc) ->
@@ -123,7 +123,7 @@ Main body for `create_user_account`
             .then ->
               next null
             .catch (error) ->
-              next user_db_put:error
+              next user_db_profile_put:error
 
     send_validation_email = (username,next) ->
       # TODO implement
