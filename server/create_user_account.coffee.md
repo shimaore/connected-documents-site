@@ -104,7 +104,7 @@ Main body for `create_user_account`
         .put [config.base_url,"user-#{uuid}",'_security'].join '/'
         .send user_db_security
         .end (res) ->
-          if not res.ok then return next user_db_security_put:res
+          if not res.ok then return next user_db_security_put:res.text
 
           my_profile =
             _id: 'profile'
