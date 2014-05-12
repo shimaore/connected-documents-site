@@ -97,7 +97,10 @@ Texte administrable (welcome text)
       logout: (the) ->
         the.widget.html render ->
           span '.username', the.user.name ? the.session.display
-          a href:'#/logout', texts.logout[the.user.language]
+          button '.logout.btn.btn-lg.btn-primary', texts.logout[the.user.language]
+
+        the.widget.find('.logout').click ->
+          the.router.dispatch '/logout'
 
       top: (the) ->
         the.widget.html render ->
