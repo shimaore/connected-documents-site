@@ -122,7 +122,7 @@ We only list questions a given user did not already submit.
       questions: (the) ->
 
         the.shareddb.all 'question', (questions) ->
-          for q in questions
+          for q in questions when q.language is the.user.language
             el = $ render ->
               div '.form-question'
             the.widget.append el
@@ -136,9 +136,6 @@ One question
         # FIXME keep_anonymous
 
         # load the answer record
-        if q.language isnt the.user.language
-          return console.log "Skipping question #{q.question}, wrong language"
-
         the.userdb.find 'answer', q.question, (answer) ->
           answer ?= {}
 
