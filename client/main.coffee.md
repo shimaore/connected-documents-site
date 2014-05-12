@@ -166,6 +166,11 @@ Hash-tag based routing
       @get '/user/:id', ->
         # Public user profile: pseudo, picture attachment, description if available.
 
+Facebook callback bug workaround
+
+      @get '_=_', ->
+        router.dispatch '/login'
+
       @get '/login', ->
         # Login with email/password, facebook connect, or twitter connect
 
@@ -210,15 +215,11 @@ Hash-tag based routing
     routes.apply router
 
 Handle hashtag changes.
+FIXME: Use a proper existing module (that deals properly with the right APIs) for this.
 
     old_location = null
     check_location = ->
       new_location = window.location.hash.substr 1
-
-Facebook callback bug..
-
-      new_location = '/login' if new_location is '_=_'
-
       if old_location isnt new_location
         console.log "Loading '#{new_location}'"
         old_location = new_location
