@@ -77,7 +77,7 @@ Passport Authentication Callback URL Handler
 
               console.dir @session
 
-              @redirect "#{return_url}?#{qs.stringify {uuid,ok:true}}"
+              @redirect return_url
 
           (passport.authenticate strategy, handler)(@req,@res,@next)
 
