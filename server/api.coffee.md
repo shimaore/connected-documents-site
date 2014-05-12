@@ -41,12 +41,14 @@ Session
 
       @get '/_app/session', ->
         @json
+          ok: true
           user: @session.user
           roles: @session.roles
           display: @session.display
 
       @delete '/_app/session', ->
         @session.destroy()
+        @session.save()
         @json
           ok: true
 
@@ -78,6 +80,7 @@ Passport Authentication Callback URL Handler
               @session.roles = ['user']
               @session.token = make_token @session
               @session.display = info.displayName ? username
+              @session.save()
 
               console.dir @session
 
@@ -143,6 +146,7 @@ We authenticate using CouchDB; our internal username is an email adress (and ide
             @session.roles = ['user']
             @session.token = make_token @session
             @session.display = username
+            @session.save()
 
             @json
               ok: true
@@ -169,6 +173,7 @@ This is only necessary for internal users.
           @session.roles = ['user']
           @session.token = make_token @session
           @session.display = username
+          @session.save()
 
           @json
             ok: true
