@@ -94,6 +94,7 @@ Main body for `create_user_account`
       # TODO initial replication ?
 
       user_db.catch (error) ->
+        console.log "user_db_create: #{error}"
         next user_db_create:error
 
       user_db.then ->
