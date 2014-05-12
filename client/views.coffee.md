@@ -532,4 +532,4 @@ Form submission for internal users.
 Toolbox
 =======
 
-    {render,input,textarea,section,label,i,img,form,select,option,span,div,a,script,raw} = require 'teacup'
+    {render,input,button,textarea,section,label,i,img,form,select,option,span,div,a,script,raw} = require 'teacup'
