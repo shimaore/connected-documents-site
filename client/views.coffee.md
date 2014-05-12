@@ -437,7 +437,7 @@ Shows the login prompt and options to login using Facebook and Twitter.
               a href:'/_app/facebook-connect', ->
                 span '.facebook-login.btn.btn-lg.btn-primary.btn-block', ->
                   span texts.login_with[the.user.language]
-                  i '.fa.fa-facebook.fa-stack-1x'
+                  i '.fa.fa-facebook'
               a href:'/_app/twitter-connect', ->
                 span '.twitter-login.btn.btn-lg.btn-primary.btn-block', ->
                   span texts.login_with[the.user.language]
