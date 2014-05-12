@@ -59,7 +59,7 @@ These functions are called with:
         fr: "Email ou mot de passe incorrect"
         en: "Invalid email or password"
       register_submit:
-        fr: 'Register'
+        fr: 'Créer un compte'
         en: 'Register'
       register_error: # System / network error
         fr: "Veuillez ré-essayer"
