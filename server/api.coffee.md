@@ -130,6 +130,8 @@ We authenticate using CouchDB; our internal username is an email adress (and ide
           password = @body.password
 
           create_user_account {username,password}, (error,uuid) =>
+            if error then return @json {error}
+
             @session.name = username
             @session.user = uuid
             @session.roles = ['user']
@@ -155,7 +157,7 @@ This is only necessary for internal users.
         create_user_account {username,password,validated:false}, (error,uuid) =>
           if error then return @json {error}
 
-          @session.user = uuid
+          @session.name = username
           @session.user = uuid
           @session.roles = ['user']
           @session.token = make_token @session
