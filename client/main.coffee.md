@@ -224,10 +224,11 @@ Facebook callback bug..
         old_location = new_location
         router.dispatch new_location
 
-    if window.location.watch?
-      console.log "Using window.location.hash for check_location"
-      window.location.watch 'hash', check_location
-    else if 'onhashchange' in window
+    # if window.location.watch?
+    #   console.log "Using window.location.watch for check_location"
+    #   window.location.watch 'hash', check_location
+    # else
+    if 'onhashchange' in window
       console.log "Using onhashchange for check_location"
       Event.bind window, 'hashchange', check_location
     else
