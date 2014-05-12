@@ -47,7 +47,7 @@ Session
           display: @session.display
 
       @delete '/_app/session', ->
-        @session.destroy()
+        @session.regenerate()
         @session.save (error) ->
           if error
             return @json {error}
@@ -61,7 +61,7 @@ Passport Authentication Callback URL Handler
       passport_callback = (strategy) ->
         return ->
           handler = (error,username,info) =>
-            @session.destroy()
+            @session.regenerate()
 
             console.dir {error,username,info}
 
@@ -134,7 +134,7 @@ We authenticate using CouchDB; our internal username is an email adress (and ide
 
         @local_connect (ok) =>
 
-          @session.destroy()
+          @session.regenerate()
 
           if not ok then return @json error:'failed'
 
