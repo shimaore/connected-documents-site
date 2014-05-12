@@ -188,7 +188,7 @@ Hash-tag based routing
 
       @get '/logout', ->
         session.user = null
-        router.dispatch ''
+        router.dispatch '/login'
 
       @get '/test', ->
         base = $ 'body'
