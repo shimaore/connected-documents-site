@@ -453,7 +453,10 @@ Form submission for internal users.
             return
 
           the.session.user = res.body.uuid
-          the.router.dispatch ''
+
+Update the session data.
+
+          the.router.dispatch '/login'
 
         the.widget.on 'submit', 'form', (e) ->
           console.log 'submit login form'

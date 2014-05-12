@@ -182,10 +182,10 @@ Facebook callback bug workaround
             session.display = res.body.display
             router.dispatch '/home'
             return
-          else
-            session.user = null
-            session.roles = null
-            session.display = null
+
+          session.user = null
+          session.roles = null
+          session.display = null
 
           base = $ 'body'
           base.empty()
