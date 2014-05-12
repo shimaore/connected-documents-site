@@ -80,7 +80,7 @@ Passport Authentication Callback URL Handler
               @session.user = uuid
               @session.roles = ['user']
               @session.token = make_token @session
-              @session.display = info.displayName ? username
+              @session.display = info?.displayName ? username
               @session.save (error) =>
                 if error
                   return @redirect "#{return_url}?#{qs.stringify {error}}"
