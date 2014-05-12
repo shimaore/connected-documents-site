@@ -81,11 +81,8 @@ Passport Authentication Callback URL Handler
               @session.roles = ['user']
               @session.token = make_token @session
               @session.display = info?.displayName ? username
-              @session.save (error) =>
-                if error
-                  return @redirect "#{return_url}?#{qs.stringify {error}}"
 
-                @redirect return_url
+              @redirect return_url
 
           (passport.authenticate strategy, handler)(@req,@res,@next)
 
@@ -145,13 +142,10 @@ We authenticate using CouchDB; our internal username is an email adress (and ide
             @session.roles = ['user']
             @session.token = make_token @session
             @session.display = username
-            @session.save (error) =>
-              if error
-                return @json {error}
 
-              @json
-                ok: true
-                uuid: uuid
+            @json
+              ok: true
+              uuid: uuid
 
 Register
 ========
@@ -174,13 +168,10 @@ This is only necessary for internal users.
           @session.roles = ['user']
           @session.token = make_token @session
           @session.display = username
-          @session.save (error) =>
-            if error
-              return @json {error}
 
-            @json
-              ok: true
-              uuid: uuid
+          @json
+            ok: true
+            uuid: uuid
 
 Couch Proxy
 ===========
