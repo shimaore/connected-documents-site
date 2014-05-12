@@ -512,6 +512,9 @@ Form submission for internal users.
               return
 
             if not res.body.ok
+              if res.body.already_connected
+                the_router.dispatch '/login'
+                return
               the.widget.find('.notification').text texts.register_failed[the.user.language]
               return
 
