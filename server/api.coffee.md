@@ -156,6 +156,9 @@ This is only necessary for internal users.
           if error then return @json {error}
 
           @session.user = uuid
+          @session.user = uuid
+          @session.roles = ['user']
+          @session.token = make_token @session
 
           @json
             ok: true
