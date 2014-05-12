@@ -43,6 +43,7 @@ Session
         @json
           user: @session.user
           roles: @session.roles
+          display: @session.display
 
       @delete '/_app/session', ->
         @session.destroy()
@@ -55,6 +56,8 @@ Passport Authentication Callback URL Handler
       passport_callback = (strategy) ->
         return ->
           handler = (error,username,info) =>
+            @session.destroy()
+
             console.dir {error,username,info}
 
             return_url = "#{config.public_url}/public/_design/site/index.html"
@@ -74,6 +77,7 @@ Passport Authentication Callback URL Handler
               @session.user = uuid
               @session.roles = ['user']
               @session.token = make_token @session
+              @session.display = info.displayName ? username
 
               console.dir @session
 
@@ -124,6 +128,8 @@ We authenticate using CouchDB; our internal username is an email adress (and ide
 
         @local_connect (ok) =>
 
+          @session.destroy()
+
           if not ok then return @json error:'failed'
 
           username = @body.username
@@ -136,6 +142,7 @@ We authenticate using CouchDB; our internal username is an email adress (and ide
             @session.user = uuid
             @session.roles = ['user']
             @session.token = make_token @session
+            @session.display = username
 
             @json
               ok: true
@@ -161,6 +168,7 @@ This is only necessary for internal users.
           @session.user = uuid
           @session.roles = ['user']
           @session.token = make_token @session
+          @session.display = username
 
           @json
             ok: true

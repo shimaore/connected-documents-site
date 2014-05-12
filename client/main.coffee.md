@@ -7,6 +7,7 @@ We do not support offline yet.
     session =
       user: null
       language: null
+      display: null
 
     default_language: 'fr'
 
@@ -23,7 +24,6 @@ Create context for views.
 
     in_context = (cb) ->
       base = "#{window.location.protocol}//#{window.location.host}"
-      console.log "Using base = #{base}"
       the =
         router: router
         session: session
@@ -75,8 +75,6 @@ Load the `store` data from the public database.
           console.log store:error
           set_language cb
         return
-
-      console.log "Loading for user #{session.user}"
 
       the.shareddb = new DB if offline then 'shared' else "#{base}/shared"
 
@@ -181,11 +179,13 @@ Facebook callback bug workaround
           if res.ok and res.body?.user?
             session.user = res.body.user
             session.roles = res.body.roles
+            session.display = res.body.display
             router.dispatch '/home'
             return
           else
             session.user = null
             session.roles = null
+            session.display = null
 
           base = $ 'body'
           base.empty()
@@ -197,28 +197,12 @@ Facebook callback bug workaround
       @get '/logout', ->
         session.user = null
         session.roles = null
+        session.display = null
         request
         .del '/_app/session'
         .accept 'json'
         .end (res) ->
           router.dispatch '/login'
-
-      @get '/test', ->
-        base = $ 'body'
-        base.empty()
-        request
-        .post '/_app/website-image'
-        .send url:'http://shimaore.net'
-        ## .accept 'image/png'
-        .accept 'json'
-        .end (res) ->
-          ###
-          blob = new Blob res.text, type:'image/png'
-          src = window.URL.createObjectURL blob
-          ###
-          src = "data:image/png;base64,#{res.body.content}"
-          $( '<img/>', src:src ).appendTo base
-          window.URL.revokeObjectURL src
 
     routes.apply router
 
