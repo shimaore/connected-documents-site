@@ -44,6 +44,11 @@ Session
           user: @session.user
           roles: @session.roles
 
+      @delete '/_app/session', ->
+        @session.destroy()
+        @json
+          ok: true
+
 Passport Authentication Callback URL Handler
 ============================================
 

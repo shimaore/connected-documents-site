@@ -183,6 +183,9 @@ Facebook callback bug workaround
             session.roles = res.body.roles
             router.dispatch '/home'
             return
+          else
+            session.user = null
+            session.roles = null
 
           base = $ 'body'
           base.empty()
@@ -193,7 +196,12 @@ Facebook callback bug workaround
 
       @get '/logout', ->
         session.user = null
-        router.dispatch '/login'
+        session.roles = null
+        request
+        .delete '/_app/session'
+        .accept 'json'
+        .end (res) ->
+          router.dispatch '/login'
 
       @get '/test', ->
         base = $ 'body'
