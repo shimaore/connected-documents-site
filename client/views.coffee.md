@@ -264,13 +264,13 @@ User Profile
               div '.form-group', ->
                 label texts.description[the.user.language]
                 textarea '.form-control', 'x-bind':'/profile/description'
-              div '.checkbox', ->
+              div '.form-group', ->
                 input type:'checkbox', 'x-bind':'value:/profile/publish/profile'
                 label texts.publish_profile[the.user.language]
-              div '.checkbox', ->
+              div '.form-group', ->
                 input type:'checkbox', 'x-bind':'value:/profile/publish/description'
                 label texts.publish_description[the.user.language]
-              div '.checkbox', ->
+              div '.form-group', ->
                 input type:'checkbox', 'x-bind':'value:/profile/publish/picture'
                 label texts.publish_picture[the.user.language]
               div '.form-group', ->
