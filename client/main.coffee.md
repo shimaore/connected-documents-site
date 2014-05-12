@@ -198,7 +198,7 @@ Facebook callback bug workaround
         session.user = null
         session.roles = null
         request
-        .delete '/_app/session'
+        .del '/_app/session'
         .accept 'json'
         .end (res) ->
           router.dispatch '/login'
