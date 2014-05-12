@@ -49,6 +49,9 @@ These functions are called with:
       login_submit:
         fr: 'Login'
         en: 'Login'
+      login_with:
+        fr: 'Se connecter avec '
+        en: 'Login with '
       login_error: # System / network error
         fr: "Veuillez ré-essayer"
         en: "Please try again"
@@ -432,13 +435,13 @@ Shows the login prompt and options to login using Facebook and Twitter.
                 value:texts.login_submit[the.user.language]
               div '.notification'
               a href:'/_app/facebook-connect', ->
-                span '.facebook-login.btn.btn-lg.btn-primary.btn-block.fa-stack.fa-lg', ->
-                  i '.fa.fa-square-o.fa-stack-2x'
+                span '.facebook-login.btn.btn-lg.btn-primary.btn-block', ->
+                  span texts.login_with[the.user.language]
                   i '.fa.fa-facebook.fa-stack-1x'
               a href:'/_app/twitter-connect', ->
-                span '.twitter-login.btn.btn-lg.btn-primary.btn-block.fa-stack.fa-lg', ->
-                  i '.fa.fa-square-o.fa-stack-2x'
-                  i '.fa.fa-twitter.fa-stack-1x'
+                span '.twitter-login.btn.btn-lg.btn-primary.btn-block', ->
+                  span texts.login_with[the.user.language]
+                  i '.fa.fa-twitter'
 
 Form submission for internal users.
 
