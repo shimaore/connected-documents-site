@@ -47,7 +47,7 @@ Session
           display: @session.display
 
       @delete '/_app/session', ->
-        @session.regenerate (error) ->
+        @session.regenerate (error) =>
           if error
             return @json {error}
 
@@ -81,7 +81,7 @@ Passport Authentication Callback URL Handler
               @session.roles = ['user']
               @session.token = make_token @session
               @session.display = info.displayName ? username
-              @session.save (error) ->
+              @session.save (error) =>
                 if error
                   return @redirect "#{return_url}?#{qs.stringify {error}}"
 
@@ -145,7 +145,7 @@ We authenticate using CouchDB; our internal username is an email adress (and ide
             @session.roles = ['user']
             @session.token = make_token @session
             @session.display = username
-            @session.save (error) ->
+            @session.save (error) =>
               if error
                 return @json {error}
 
@@ -174,7 +174,7 @@ This is only necessary for internal users.
           @session.roles = ['user']
           @session.token = make_token @session
           @session.display = username
-          @session.save (error) ->
+          @session.save (error) =>
             if error
               return @json {error}
 
