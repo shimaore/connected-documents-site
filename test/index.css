@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Quicksand Regular'), local('Quicksand-Regular'), url(Quicksand-Regular.woff) format('woff'), url(Quicksand-Regular.ttf) format('ttf'), url(Quicksand-Regular.svg) format('svg'), url(Quicksand-Regular.otf) format('otf');
+}
+
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Quicksand Bold'), local('Quicksand-Bold'), url(Quicksand-Bold.woff) format('woff'), url(Quicksand-Bold.ttf) format('ttf'), url(Quicksand-Bold.svg) format('svg'), url(Quicksand-Bold.otf) format('otf');
+}
+
 body {
   font-family: 'Quicksand', 'Gillius', "Gill Sans", sans;
   font-weight: normal;
