@@ -150,6 +150,16 @@ Type: `answer`
 
 When submitted, is copied over into the `private` database.
 
+Other (TBD)
+-----
+
+Compte client
+Feedback downstream ('inbox') "votre commentaire sur l'ouvrage XYZ a été accepté", ...
+Purchase (`purchase:<purchase-uuid>`)
+Purchase line item (`purchase-line:<purchase-uuid>:<line-id>`)
+Feedback upstream (demande de renseignements, commentaire sur un ouvrage, ..)
+Métriques
+
 Db: 'private'
 ==============================
 
