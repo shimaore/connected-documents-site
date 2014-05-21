@@ -215,6 +215,7 @@ Facebook callback bug workaround
           append_view base, 'welcome_text'
           append_view base, 'register'
           append_view base, 'login'
+          append_view base, 'login_or_register'
           return
 
       @get '/logout', ->

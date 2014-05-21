@@ -20,6 +20,12 @@ These functions are called with:
       language:
         fr: 'Langue'
         en: 'Language'
+      menu:
+        fr: 'Menu'
+        en: 'Menu'
+      profile:
+        fr: 'Profil'
+        en: 'Profile'
       name:
         fr: 'Nom'
         en: 'Name'
@@ -38,6 +44,9 @@ These functions are called with:
       logout:
         fr: 'Déconnexion'
         en: 'Log out'
+      submit_done:
+        fr: "Fini"
+        en: "Done"
       submit_response:
         fr: "J'ai répondu"
         en: "I answered"
@@ -47,9 +56,18 @@ These functions are called with:
       password:
         fr: 'Mot de passe'
         en: 'Password'
+      show_login:
+        fr: 'Je me suis déjà connecté(e)'
+        en: "I've been here before"
+      show_register:
+        fr: 'Première connexion'
+        en: 'First time here'
       login_submit:
         fr: 'Login'
         en: 'Login'
+      register_with:
+        fr: 'Créer un compte avec '
+        en: 'Register using '
       login_with:
         fr: 'Se connecter avec '
         en: 'Login with '
@@ -430,6 +448,33 @@ Content submission
 
             return false
 
+Login-or-register widget
+========================
+
+      login_or_register: (the) ->
+        $ 'section.login'
+          .hide()
+
+        $ 'section.register'
+          .hide()
+
+        the.widget.html render ->
+          section '.login-or-register', ->
+            div '.row', ->
+              button '.show-register.btn.btn-lg.btn-primary.col-md-4.col-md-offset-1', texts.show_register[the.user.language]
+              button '.show-login.btn.btn-lg.btn-primary.col-md-4.col-md-offset-1', texts.show_login[the.user.language]
+
+        the.widget.on 'click', '.show-register', ->
+          the.widget.hide()
+          $ 'section.register'
+            .show()
+
+        the.widget.on 'click', '.show-login', ->
+          the.widget.hide()
+          $ 'section.login'
+            .show()
+
+
 Login widget
 ============
 
@@ -437,30 +482,37 @@ Shows the login prompt and options to login using Facebook and Twitter.
 
       login: (the) ->
         the.widget.html render ->
-          section '.login', ->
-            form '.form-signin', ->
-              label '.input-group.margin-bottom-sm', ->
-                span '.input-group-addon', -> i '.fa.fa-envelope-o.fa-fw'
-                input '.username.form-control',
-                  type:'email'
-                  placeholder:texts.email[the.user.language]
-              label '.input-group', ->
-                span '.input-group-addon', -> i '.fa.fa-key.fa-fw'
-                input '.password.form-control',
-                  type:'password'
-                  placeholder:texts.password[the.user.language]
-              input '.btn.btn-lg.btn-primary.btn-block',
-                type:'submit'
-                value:texts.login_submit[the.user.language]
-              div '.notification'
-              a href:'/_app/facebook-connect', ->
-                span '.facebook-login.btn.btn-lg.btn-primary.btn-block', ->
+          section '.login.col-md-6', ->
+
+            div '.row', ->
+
+              a '.link-signin.col-md-5.col-md-offset-1', href:'/_app/facebook-connect', ->
+                span '.facebook-login.btn.btn-lg.btn-primary', ->
                   span texts.login_with[the.user.language]
                   i '.fa.fa-facebook'
-              a href:'/_app/twitter-connect', ->
-                span '.twitter-login.btn.btn-lg.btn-primary.btn-block', ->
+
+              a '.link-signin.col-md-5.col-md-offset-2', href:'/_app/twitter-connect', ->
+                span '.twitter-login.btn.btn-lg.btn-primary', ->
                   span texts.login_with[the.user.language]
                   i '.fa.fa-twitter'
+
+            div '.row', ->
+
+              form '.form-signin.col-md-10.col-md-offset-1', ->
+                label '.input-group.margin-bottom-sm', ->
+                  span '.input-group-addon', -> i '.fa.fa-envelope-o.fa-fw'
+                  input '.username.form-control',
+                    type:'email'
+                    placeholder:texts.email[the.user.language]
+                label '.input-group', ->
+                  span '.input-group-addon', -> i '.fa.fa-key.fa-fw'
+                  input '.password.form-control',
+                    type:'password'
+                    placeholder:texts.password[the.user.language]
+                input '.btn.btn-lg.btn-primary.btn-block',
+                  type:'submit'
+                  value:texts.login_submit[the.user.language]
+                div '.notification'
 
 Form submission for internal users.
 
@@ -499,22 +551,37 @@ Register widget
 
       register: (the) ->
         the.widget.html render ->
-          section '.register', ->
-            form '.form-register', ->
-              label '.input-group.margin-bottom-sm', ->
-                span '.input-group-addon', -> i '.fa.fa-envelope-o.fa-fw'
-                input '.username.form-control',
-                  type:'email'
-                  placeholder:texts.email[the.user.language]
-              label '.input-group', ->
-                span '.input-group-addon', -> i '.fa.fa-key.fa-fw'
-                input '.password.form-control',
-                  type:'password'
-                  placeholder:texts.password[the.user.language]
-              input '.btn.btn-lg.btn-primary.btn-block',
-                type:'submit'
-                value:texts.register_submit[the.user.language]
-              div '.notification'
+          section '.register.col-md-6', ->
+
+            div '.row', ->
+
+              a '.link-register.col-md-5.col-md-offset-1', href:'/_app/facebook-connect', ->
+                span '.facebook-login.btn.btn-lg.btn-primary', ->
+                  span texts.register_with[the.user.language]
+                  i '.fa.fa-facebook'
+
+              a '.link-register.col-md-5.col-md-offset-7', href:'/_app/twitter-connect', ->
+                span '.twitter-login.btn.btn-lg.btn-primary', ->
+                  span texts.register_with[the.user.language]
+                  i '.fa.fa-twitter'
+
+            div '.row', ->
+
+              form '.form-register.col-md-10.col-md-offset-1', ->
+                label '.input-group.margin-bottom-sm', ->
+                  span '.input-group-addon', -> i '.fa.fa-envelope-o.fa-fw'
+                  input '.username.form-control',
+                    type:'email'
+                    placeholder:texts.email[the.user.language]
+                label '.input-group', ->
+                  span '.input-group-addon', -> i '.fa.fa-key.fa-fw'
+                  input '.password.form-control',
+                    type:'password'
+                    placeholder:texts.password[the.user.language]
+                input '.btn.btn-lg.btn-primary.btn-block',
+                  type:'submit'
+                  value:texts.register_submit[the.user.language]
+                div '.notification'
 
 Form submission for internal users.
 
