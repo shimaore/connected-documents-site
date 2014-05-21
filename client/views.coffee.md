@@ -105,7 +105,20 @@ Texte administrable (welcome text)
 
       top: (the) ->
         the.widget.html render ->
-          img '.logo', src:"logo-#{the.user.language}.png"
+          a href:'#/', ->
+            img '.logo', src:"logo-#{the.user.language}.png"
+
+      menu: (the) ->
+        the.widget.html render ->
+          div '.dropdown', ->
+            a '.dropdown-toggle', 'data-toggle':'dropdown', href:'#', texts.menu[the.user.language]
+            ul class:'dropdown-menu', role:'menu', ->
+              li role:'presentation', ->
+                a href:'#/profile', role:'menuitem', texts.profile[the.user.language]
+              li role:'presentation', ->
+                a href:'#/logout', role:'menuitem', texts.logout[the.user.language]
+
+        ($ '.dropdown-toggle').dropdown()
 
 Twitter feeds
 =============
@@ -291,6 +304,10 @@ User Profile
                     option value:o, name
               div '.notification'
               div '.status'
+              button '.done.btn.btn-lg.btn-primary', texts.submit_done[the.user.language]
+
+        the.widget.find('.done').click ->
+          the.router.dispatch '/'
 
         the.widget.find('input.picture').on 'change', ->
           selected_file = @files[0]
@@ -533,4 +550,4 @@ Form submission for internal users.
 Toolbox
 =======
 
-    {render,input,button,textarea,section,label,i,img,form,select,option,span,div,a,script,raw} = require 'teacup'
+    {render,input,button,textarea,section,label,i,img,form,select,option,span,div,a,script,raw,ul,li} = require 'teacup'

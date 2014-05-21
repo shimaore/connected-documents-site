@@ -22,6 +22,25 @@ Create context for views.
     DB = require './db.coffee.md'
     views = require './views.coffee.md'
 
+    check_session = (cb) ->
+      request
+      .get '/_app/session'
+      .accept 'json'
+      .end (res) ->
+        if res.ok and res.body?.user?
+          session.user = res.body.user
+          session.roles = res.body.roles
+          session.display = res.body.display
+          cb()
+          return
+
+        session.user = null
+        session.roles = null
+        session.display = null
+
+        cb()
+        return
+
     in_context = (cb) ->
       base = "#{window.location.protocol}//#{window.location.host}"
       the =
@@ -116,43 +135,56 @@ Hash-tag based routing
     routes = ->
 
       @get '', ->
-        if session.user?
-          router.dispatch '/home'
-        else
-          router.dispatch '/login'
+        check_session ->
+          if session.user?
+            router.dispatch '/home'
+          else
+            router.dispatch '/login'
 
       @get '/home', ->
-        # Home content:
-        base = $ 'body'
-        base.empty()
+        check_session ->
+          if not session.user?
+            router.dispatch '/login'
+            return
 
-        # Top menu: profile, logout
-        append_view base, 'top'
-        append_view base, 'profile'
-        append_view base, 'logout'
-        append_view base, 'welcome_text'
-        append_view base, 'twitter_feeds'
+          # Home content:
+          base = $ 'body'
+          base.empty()
 
-        # Top content: questions (feedback)
-        # List all current questions found in shared database, hide questions user already answered,
-        append_view base, 'questions'
+          # Top menu: profile, logout
+          append_view base, 'top'
+          append_view base, 'menu'
+          # append_view base, 'logout'
+          append_view base, 'welcome_text'
+          append_view base, 'twitter_feeds'
 
-        # Content suggestion: books (by title, author), URLs
-        append_view base, 'content_submission'
+          # Top content: questions (feedback)
+          # List all current questions found in shared database, hide questions user already answered,
+          append_view base, 'questions'
 
-        # List bookshelves:
-        # - my new books (recently purchased, currently reading)
-        # - wishlist(s)
-        # - recently suggested books (esp. ones pending reviews)
-        append_view base, 'shelves'
+          # List bookshelves:
+          # - my new books (recently purchased, currently reading)
+          # - wishlist(s)
+          # - recently suggested books (esp. ones pending reviews)
+          append_view base, 'shelves'
 
-        # 
-        append_view base, 'shared_content'
+          append_view base, 'shared_content'
+
+          # Content suggestion: books (by title, author), URLs
+          append_view base, 'content_submission'
 
       @get '/profile', ->
-        # Currently only profile options are: publish_profile, pseudonym, picture, publish_picture flag, description ('about me")
-        # Note: the publish_picture flag is a private flag, when changed it adds or removes the picture attachment from the public profile.
-        # Note: the public_profile flag is a private flag, when changed it adds or remove the profile from the shared db.
+        check_session ->
+          base = $ 'body'
+          base.empty()
+
+          # Currently only profile options are: publish_profile, pseudonym, picture, publish_picture flag, description ('about me")
+          # Note: the publish_picture flag is a private flag, when changed it adds or removes the picture attachment from the public profile.
+          # Note: the public_profile flag is a private flag, when changed it adds or remove the profile from the shared db.
+          append_view base, 'top'
+          append_view base, 'menu'
+          append_view base, 'profile'
+          # append_view base, 'logout'
 
       @get '/content/:id', ->
         # Display content:
@@ -172,26 +204,17 @@ Facebook callback bug workaround
       @get '/login', ->
         # Login with email/password, facebook connect, or twitter connect
 
-        request
-        .get '/_app/session'
-        .accept 'json'
-        .end (res) ->
-          if res.ok and res.body?.user?
-            session.user = res.body.user
-            session.roles = res.body.roles
-            session.display = res.body.display
+        check_session ->
+          if session.user?
             router.dispatch '/home'
             return
-
-          session.user = null
-          session.roles = null
-          session.display = null
 
           base = $ 'body'
           base.empty()
           append_view base, 'top'
-          append_view base, 'login'
+          append_view base, 'welcome_text'
           append_view base, 'register'
+          append_view base, 'login'
           return
 
       @get '/logout', ->
