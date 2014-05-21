@@ -14,7 +14,7 @@
       # 'fonts/glyphicons-halflings-regular.eot'
       # 'fonts/glyphicons-halflings-regular.ttf'
       # 'fonts/glyphicons-halflings-regular.woff'
-      'js/bootstrap.min.js         ../frifri-bootstrap/dist/js/bootstrap.min.js application/javascript'
+      #'js/bootstrap.min.js         ../frifri-bootstrap/dist/js/bootstrap.min.js application/javascript'
     ].map (x) ->
       [name,src,type] = x.split /\s+/
       {name,src,type}

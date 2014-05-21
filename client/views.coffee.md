@@ -9,6 +9,7 @@ These functions are called with:
 
     pflock = require 'pflock-browserify'
     $ = require 'jquery'
+    bootstrap = (require './vendor/bootstrap')($)
     request = require 'superagent'
     crypto = require 'crypto'
 
