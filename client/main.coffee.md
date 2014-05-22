@@ -53,6 +53,10 @@ Create context for views.
         cb()
         return
 
+    the_public_store = null
+    the_shared_store = null
+    the_user_profile = null
+
     in_context = (cb) ->
       base = "#{window.location.protocol}//#{window.location.host}"
       the =
@@ -97,36 +101,58 @@ Avoid showing a login prompt if we're not logged in.
 
 Load the `store` data from the public database.
 
+        if the_public_store?
+          the.store = the_public_store
+          set_language cb
+          return
+
         public_db = new DB "#{base}/public"
         public_db.pouch.get 'store'
         .then (doc) ->
           the.store = doc
+          the_public_store = doc
           set_language cb
         .catch (error) ->
           console.log store:error
           set_language cb
         return
 
-      the.shareddb = new DB if offline then 'shared' else "#{base}/shared"
+      get_the_shared_store = (cb) ->
+        if the_shared_store?
+          the.store = the_shared_store
+          cb()
+          return
 
-      the.shareddb.pouch.get 'store'
-      .then (doc) ->
-        the.store = doc
+        the.shareddb = new DB if offline then 'shared' else "#{base}/shared"
+
+        the.shareddb.pouch.get 'store'
+        .then (doc) ->
+          the_shared_store = doc
+          the.store = doc
+          cb()
+        .catch (error) ->
+          console.log store:error
+          cb()
+          # FIXME Notify user? Retry?
+
+      get_the_user_profile = (cb) ->
+        if the_user_profile?
+          cb()
+          return
 
         the.userdb = new DB if offline then 'user' else "#{base}/user-#{session.user}"
         the.userdb.pouch.get 'profile'
         .then (doc) ->
+          the_user_profile = doc
           the.user = doc
           session.language = doc.language
-          set_language cb
+          setTimeout (-> the_user_profile = null), 10*seconds
+          cb()
         .catch (error) ->
           console.log user_profile:error
-          set_language cb
+          cb()
 
-      .catch (error) ->
-        console.log store:error
-        set_language cb
-        # FIXME Notify user? Retry?
+      get_the_shared_store -> get_the_user_profile -> set_language cb
 
 Append a view to the specific (component-dom) widget.
 
