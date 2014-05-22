@@ -1,6 +1,8 @@
     $ = require 'jquery'
     request = require 'superagent'
 
+    seconds = 1000
+
 We do not support offline yet.
 
     offline = false
@@ -28,10 +30,17 @@ Create context for views.
     views = require './views.coffee.md'
 
     check_session = (cb) ->
+
+      now = new Date()
+      if session._check? and now-session._check < 2*seconds
+        cb()
+        return
+
       request
       .get '/_app/session'
       .accept 'json'
       .end (res) ->
+        session._check = new Date()
         if res.ok and res.body?.user?
           session.user = res.body.user
           session.roles = res.body.roles
