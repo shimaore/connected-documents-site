@@ -4,10 +4,15 @@
 We do not support offline yet.
 
     offline = false
-    session =
-      user: null
-      language: null
-      display: null
+    session = {}
+
+    clear_session = ->
+      session.user = null
+      session.language = null
+      session.display = null
+      session._check = null
+
+    clear_session()
 
     default_language: 'fr'
 
@@ -34,9 +39,7 @@ Create context for views.
           cb()
           return
 
-        session.user = null
-        session.roles = null
-        session.display = null
+        clear_session()
 
         cb()
         return
@@ -219,9 +222,7 @@ Facebook callback bug workaround
           return
 
       @get '/logout', ->
-        session.user = null
-        session.roles = null
-        session.display = null
+        clear_session()
         request
         .del '/_app/session'
         .accept 'json'
