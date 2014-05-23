@@ -18,6 +18,8 @@ Rewrite function into wrapped text (this works around some limitations in how Co
         console.log "PouchDB for #{@name}"
         @pouch = new PouchDB @name
 
+      _id: _id
+
 Add a (HoodieHQ-esque) type-based API to PouchDB.
 
       all: (type,cb) ->
