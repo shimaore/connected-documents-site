@@ -1,3 +1,5 @@
+Note: historically I've been using ':' as separator for ID components. HoodieHQ uses '/' (see https://github.com/hoodiehq/hoodie.js/blob/master/src/lib/store/remote.js#L517 )
+
     _id = (type,key) ->
       if key?
         [type,key].join ':'
@@ -40,6 +42,9 @@ Add a (HoodieHQ-esque) type-based API to PouchDB.
             new_doc[k] = old_doc[k] for own k of old_doc
           new_doc[k] = update[k] for own k of update
           new_doc._id ?= _id type, id
+          # Follow the HoodieHQ fields (see https://github.com/hoodiehq/hoodie.js/blob/master/src/lib/store/api.js#L144 )
+          new_doc.type ?= type
+          new_doc.id ?= id
           @pouch.put new_doc, (err,res) ->
             if err or not res.rev?
               cb? null, old_doc
