@@ -95,7 +95,7 @@ img.thumbnail {
 .form-question {
   max-width: 540px;
   padding: 15px;
-  border: solid thin pink;
+  margin: 15px;
 }
 .welcome {
   padding: 1em;
@@ -119,4 +119,8 @@ img.thumbnail {
   display: inline-block;
   min-width: 20%;
   max-width: 21%;
+}
+
+.submit-answer {
+  float: right;
 }

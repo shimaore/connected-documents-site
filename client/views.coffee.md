@@ -101,7 +101,12 @@ These functions are called with:
       shared_content:
         fr: 'Contenu partagé'
         en: 'Shared content'
-
+      participate_in_survey:
+        fr: "Participer à l'étude"
+        en: 'Participate in survey'
+      submit_answers:
+        fr: 'Fini'
+        en: 'Done'
 
     module.exports = widgets =
 
@@ -166,28 +171,56 @@ We only list questions a given user did not already submit.
 
       questions: (the) ->
 
-        the.shareddb.all 'question', (questions) ->
-          for q in questions when q.language is the.user.language
+        the.shareddb.all 'question', (questions) -> the.userdb.all 'answer', (answer_docs) ->
+          answers = {}
+          answers[doc.id] = doc for doc in answer_docs
+
+          any_questions = false
+          container = $ '<div/>'
+          for q in questions when q.language is the.user.language and not answers[q.question]?.submitted
             el = $ render ->
               div '.form-question'
-            the.widget.append el
-            widgets.one_question the, el, q
+            widgets.one_question the, el, q, answers[q.question] ? {}
+            any_questions = true
+            container.append el
+
+          container.append render ->
+            button '.submit-answers', texts.submit_answers[the.user.language]
+
+          if any_questions
+            the.widget.html render ->
+              div '.questions', ->
+                if the.store.questions_text?
+                  div '.questions-text.color-grey', the.store.questions_text[the.user.language]
+                button '.participate_in_survey.btn.btn-lg.btn-primary', texts.participate_in_survey[the.user.language]
+
+            the.widget.on 'click', '.participate_in_survey', ->
+              the.widget
+                .find 'button'
+                .remove()
+              the.widget.append container
+
+Simulate the user clicking on all the "submit-answer" buttons.
+
+              container.on 'click', '.submit-answers', ->
+                the.widget
+                  .find '.submit-answer'
+                  .click()
+                the.widget
+                  .find 'button'
+                  .remove()
+                the.widget
+                  .find '.questions-text'
+                  .remove()
 
 One question
 ============
 
-      one_question: (the,el,q) ->
+      one_question: (the,el,q,answer) ->
 
         # FIXME keep_anonymous
 
-        # load the answer record
-        the.userdb.find 'answer', q.question, (answer) ->
-          answer ?= {}
-
-          if answer.submitted
-            console.log "Question was already submitted"
-            return
-
+        do ->
           input_html =
             switch q.answer_type
               when 'boolean'
@@ -208,23 +241,35 @@ One question
 
           el.html render ->
             div '.question.form-group', ->
+              button '.submit-answer .btn', -> i '.fa.fa-times'
               raw input_html
-            div '.submitted.form-group', ->
-              input type:'checkbox', 'x-bind':'value:/answer/submitted'
-              label texts.submit_response[the.user.language]
 
           el.each ->
             bindings = pflock this, {answer}
+
+            changed = (data) ->
+              the.userdb.update 'answer', q.question, data, (doc,old_doc) ->
+                bindings.toDocument {answer: doc ? old_doc}
+                el
+                  .find 'button i'
+                  .removeClass 'fa-refresh fa-spin'
+                  .addClass 'fa-times'
+                if doc?.submitted
+                  el.hide()
+                return
+
             bindings.on 'changed', ->
+              changed bindings.data.answer
+
+            el.on 'click', '.submit-answer', ->
+              el
+                .find 'button i'
+                .removeClass 'fa-times'
+                .addClass 'fa-refresh fa-spin'
               data = bindings.data.answer
-              return unless data.submitted
               the.private_submit data, (ok) ->
                 data.submitted = ok
-                the.userdb.update 'answer', q.question, data, (doc,old_doc) ->
-                  bindings.toDocument {answer: doc ? old_doc}
-                  if doc?.submitted
-                    $(el).hide()
-                  return
+                changed data
 
 My Shelves
 ==========
