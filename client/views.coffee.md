@@ -124,7 +124,7 @@ Texte administrable (welcome text)
       top: (the) ->
         the.widget.html render ->
           a href:'#/', ->
-            img '.logo', src:"logo-#{the.user.language}.png"
+            img ".logo.#{if the.user? then 'logged-in' else 'logged-out'}", src:"logo-#{the.user.language}.png"
 
       menu: (the) ->
         the.widget.html render ->

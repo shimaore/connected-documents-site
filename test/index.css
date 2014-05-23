@@ -35,7 +35,11 @@ body div.tagline {
 
 img.logo {
   width: 524px;
-    max-width: 100%;
+  max-width: 100%;
+}
+img.logo.logged-in {
+  width: 300px;
+  max-width: 50%;
 }
 
 img.picture {
