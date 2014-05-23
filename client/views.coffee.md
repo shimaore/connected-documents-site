@@ -113,18 +113,27 @@ Texte administrable (welcome text)
           the.widget.html render ->
             div '.color-grey.welcome', the.store.welcome_text[the.user.language]
 
+Logout button
+=============
+
       logout: (the) ->
         the.widget.html render ->
           span '.username', the.user.name ? the.session.display
           button '.logout.btn.btn-lg.btn-primary', texts.logout[the.user.language]
 
-        the.widget.find('.logout').click ->
+        the.widget.on 'click', '.logout', ->
           the.router.dispatch '/logout'
+
+Top (logo)
+==========
 
       top: (the) ->
         the.widget.html render ->
           a href:'#/', ->
             img ".logo.#{if the.user? then 'logged-in' else 'logged-out'}", src:"logo-#{the.user.language}.png"
+
+Menu
+====
 
       menu: (the) ->
         the.widget.html render ->
@@ -324,7 +333,7 @@ User Profile
               div '.status'
               button '.done.btn.btn-lg.btn-primary', texts.submit_done[the.user.language]
 
-        the.widget.find('.done').click ->
+        the.widget.on 'click', '.done', ->
           the.router.dispatch '/'
 
         the.widget.find('input.picture').on 'change', ->
