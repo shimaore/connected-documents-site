@@ -452,12 +452,6 @@ Login-or-register widget
 ========================
 
       login_or_register: (the) ->
-        $ 'section.login'
-          .hide()
-
-        $ 'section.register'
-          .hide()
-
         the.widget.html render ->
           section '.login-or-register', ->
             div '.row', ->
@@ -482,7 +476,7 @@ Shows the login prompt and options to login using Facebook and Twitter.
 
       login: (the) ->
         the.widget.html render ->
-          section '.login.col-md-6', ->
+          section '.login.col-md-6.col-md-offset-2', ->
 
             div '.row', ->
 
@@ -513,6 +507,9 @@ Shows the login prompt and options to login using Facebook and Twitter.
                   type:'submit'
                   value:texts.login_submit[the.user.language]
                 div '.notification'
+
+        $ 'section.login'
+          .hide()
 
 Form submission for internal users.
 
@@ -551,7 +548,7 @@ Register widget
 
       register: (the) ->
         the.widget.html render ->
-          section '.register.col-md-6', ->
+          section '.register.col-md-6.col-md-offset-2', ->
 
             div '.row', ->
 
@@ -582,6 +579,9 @@ Register widget
                   type:'submit'
                   value:texts.register_submit[the.user.language]
                 div '.notification'
+
+        $ 'section.register'
+          .hide()
 
 Form submission for internal users.
 
