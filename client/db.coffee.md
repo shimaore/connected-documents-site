@@ -40,7 +40,7 @@ Add a (HoodieHQ-esque) type-based API to PouchDB.
           new_doc = {}
           if old_doc?
             new_doc[k] = old_doc[k] for own k of old_doc
-          new_doc[k] = update[k] for own k of update
+          new_doc[k] = update[k] for own k of update when not k.match /^_/
           new_doc._id ?= _id type, id
           # Follow the HoodieHQ fields (see https://github.com/hoodiehq/hoodie.js/blob/master/src/lib/store/api.js#L144 )
           new_doc.type ?= type
