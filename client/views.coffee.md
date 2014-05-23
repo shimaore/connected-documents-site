@@ -1,4 +1,4 @@
-These functions are called with:
+The functions are called with:
 `widget` -- a newly created jquery `<div>` or other, empty at startup.
 `userdb` -- a DB for the current user's db
 `shareddb` -- a DB for the shared db (read-only in most cases)
@@ -12,6 +12,19 @@ These functions are called with:
     bootstrap = (require './vendor/bootstrap')($)
     request = require 'superagent'
     crypto = require 'crypto'
+    throttle = require './throttle.coffee.md'
+
+    thumbnail_content_type = 'image/png'
+    seconds = 1000
+
+    website_image = (url,cb) ->
+      request
+        .post '/_app/website-image'
+        .send {url}
+        .accept 'json'
+        .end (res) ->
+          if res.ok
+            cb res.body.content
 
     texts =
       languages:
@@ -98,6 +111,9 @@ These functions are called with:
       author:
         fr: 'Auteur'
         en: 'Author'
+      summary:
+        fr: 'Résumé'
+        en: 'Summary'
       shared_content:
         fr: 'Contenu partagé'
         en: 'Shared content'
@@ -107,6 +123,18 @@ These functions are called with:
       submit_answers:
         fr: 'Fini'
         en: 'Done'
+      content_type:
+        fr: 'Type de contenu'
+        en: 'Type'
+      content_type_book:
+        fr: 'Livre ou ebook'
+        en: 'Paper book or e-book'
+      content_type_url:
+        fr: 'Site ou page web'
+        en: 'Site or web page'
+      content_type_offered:
+        fr: 'PDF'
+        en: 'PDF'
 
     module.exports = widgets =
 
@@ -436,69 +464,140 @@ Content submission
 ==================
 
       content_submission: (the) ->
+
+        content_types =
+          if 'admin' in the.session.roles
+            ['book','url','offered']
+          else
+            ['book','url']
+
         the.widget.html render ->
           section '.content_submission', ->
             form '.form-submission', ->
+
+Content type
+
               div '.form-group', ->
-                label texts.url_link[the.user.language]
-                input '.url.form-control',
-                  type:'url', required:true
-                img '.thumbnail', src:'coeur.png'
+                label texts.content_type[the.user.language]
+                select '.content_type.form-control',
+                  required:true,
+                  'x-bind':'value:/content_type', ->
+                    for t in content_types
+                      option t, texts["content_type_#{t}"][the.user.language]
+
+Title
+
               div '.form-group', ->
                 label texts.title[the.user.language]
                 input '.title.form-control',
                   type:'text', required:true
+                  'x-bind':'value:/title'
+
+Author
+
               div '.form-group', ->
                 label texts.author[the.user.language]
                 input '.author.form-control',
                   type:'text', required:true
+                  'x-bind':'value:/author'
+
+Summary
+
+              div '.form-group', ->
+                label texts.summary[the.user.language]
+                textarea '.summary.form-control',
+                  required:true
+                  'x-bind':'value:/summary'
+
+Thumbnail / photo
+
+              div '.form-group', ->
+                i '.loading-thumbnail .fa.fa-spin'
+                img '.thumbnail', src:'coeur.png'
+
+URL
+
+              div '.form-group.on_url', ->
+                label texts.url_link[the.user.language]
+                input '.url.form-control',
+                  type:'url', required:true
+                  'x-bind':'value:/url'
+                  placeholder:'http://'
+
               input '.btn.btn-default',
                 type:'submit', value:texts.submit[the.user.language]
               div '.notification'
-              div '.status'
 
         the.widget.find('form').each ->
           el = this
-          status = $(el).find('.status')
-          thumbnail = null
-          $(el).find('.url').on 'focusout', ->
-            url = $(@).val()
-            request
-            .post '/_app/website-image'
-            .send {url}
-            .accept 'json'
-            .end (res) ->
-              if res.ok
-                $(el).find('img.thumbnail').attr 'src', "data:image/png;base64,#{res.body.content}"
-                thumbnail = res.body.content
+          doc =
+            type: 'content'
+            content_type: 'book'
+            submitted_by: the.session.user
+
+          bindings = pflock el, doc
+
+          bindings.on 'path-changed', (path,value) ->
+            switch path
+              when '/url'
+                $(el)
+                  .find '.loading-thumbnail'
+                  .addClass 'fa-refresh'
+                throttle 'website_image', 3*seconds, ->
+                  website_image value, (img) ->
+                    $(el).find('img.thumbnail').attr 'src', "data:#{thumbnail_content_type};base64,#{img}"
+                    doc._attachments =
+                      thumbnail:
+                        content_type: thumbnail_content_type
+                        data: img
+                    $(el)
+                      .find '.loading-thumbnail'
+                      .removeClass 'fa-refresh'
 
           $(el).submit (e) ->
             e.preventDefault()
-            status.addClass 'saving'
+            $(el)
+              .find '.btn'
+              .removeClass 'btn-default'
+              .addClass 'btn-info'
+
+Compute a proper ID for the document
+
             h = crypto.createHash 'sha1'
-            h.update $(el).find('input.url').val()
+
+            switch doc.content_type
+              when 'book'
+                h.update doc.title
+                h.update doc.author
+
+              when 'url'
+                unless doc.url?
+                  console.log "Missing doc.url"
+                  # FIXME notify
+                  return
+
+                h.update doc.url
+
+              when 'offered'
+                h.update doc.title
+                h.update doc.author
+
+              else
+                console.log "Missing doc.content_type"
+                # FIXME
+                return
+
             uuid = h.digest 'hex'
-
-            doc =
-              type: 'content'
-              _id: "content:#{uuid}"
-              content: uuid
-              submitted_by: the.session.user
-
-              title: $(el).find('input.title').val()
-              author: $(el).find('input.author').val()
-              url: $(el).find('input.url').val()
-
-            if thumbnail?
-
-              doc._attachments =
-                thumbnail:
-                  content_type: 'image/png'
-                  data: thumbnail
+            doc.id = uuid
+            doc._id = the.userdb._id 'content', uuid
 
             the.shared_submit doc, (ok) ->
-              status.removeClass 'saving'
-              status.addClass if ok then 'saved' else 'failed'
+              $(el)
+                .find 'btn'
+                .removeClass 'btn-info'
+                .addClass if ok then 'btn-success' else 'btn-warning'
+
+              the.router.dispatch '/'
 
             return false
 

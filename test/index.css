@@ -124,3 +124,8 @@ img.thumbnail {
 .submit-answer {
   float: right;
 }
+
+.loading-thumbnail {
+  position: absolute;
+}
+
