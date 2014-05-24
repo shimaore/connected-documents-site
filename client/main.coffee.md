@@ -29,7 +29,9 @@ Create context for views.
     DB = require './db.coffee.md'
     views = require './views.coffee.md'
 
-    check_session = (cb) ->
+Session middleware :)
+
+    get_session = (cb) ->
 
       now = new Date()
       if session._check? and now-session._check < 2*seconds
@@ -52,6 +54,15 @@ Create context for views.
 
         cb()
         return
+
+    check_session = (cb) ->
+      get_session ->
+        if session.user?
+          cb()
+        else
+          router.dispatch '/login'
+
+Optimize loading of (normally not changing) server-side data
 
     the_public_store = null
     the_shared_store = null
@@ -77,6 +88,22 @@ Create context for views.
           .end (res) ->
             cb res.ok and res.body.ok
         user: {}
+
+Append a view to the specific widget.
+
+        view: (view_name) ->
+          my_widget = $ '<div/>'
+
+          my = {}
+          my[k] = the[k] for own k of the
+
+          my.widget = my_widget
+          if views[view_name]?
+            console.log "Loading view #{view_name}"
+            views[view_name] my
+          else
+            console.log "Unknown view #{view_name}"
+          my.widget
 
       set_language = (next) ->
         if session.language?
@@ -118,12 +145,12 @@ Load the `store` data from the public database.
         return
 
       get_the_shared_store = (cb) ->
+        the.shareddb = new DB if offline then 'shared' else "#{base}/shared"
+
         if the_shared_store?
           the.store = the_shared_store
           cb()
           return
-
-        the.shareddb = new DB if offline then 'shared' else "#{base}/shared"
 
         the.shareddb.pouch.get 'store'
         .then (doc) ->
@@ -136,11 +163,12 @@ Load the `store` data from the public database.
           # FIXME Notify user? Retry?
 
       get_the_user_profile = (cb) ->
+        the.userdb = new DB if offline then 'user' else "#{base}/user-#{session.user}"
+
         if the_user_profile?
           cb()
           return
 
-        the.userdb = new DB if offline then 'user' else "#{base}/user-#{session.user}"
         the.userdb.pouch.get 'profile'
         .then (doc) ->
           the_user_profile = doc
@@ -154,75 +182,64 @@ Load the `store` data from the public database.
 
       get_the_shared_store -> get_the_user_profile -> set_language cb
 
-Append a view to the specific (component-dom) widget.
-
-    append_view = (base_widget,view_name) ->
-      the_widget = $ '<div/>'
-      base_widget.append the_widget
-
-      in_context (the) ->
-        the.widget = the_widget
-        if views[view_name]?
-          console.log "Loading view #{view_name}"
-          views[view_name] the
-        else
-          console.log "Unknown view #{view_name}"
-
 Hash-tag based routing
 
     routes = ->
 
       @get '', ->
         check_session ->
-          if session.user?
-            router.dispatch '/home'
-          else
-            router.dispatch '/login'
+          router.dispatch '/home'
 
       @get '/home', ->
         check_session ->
-          if not session.user?
-            router.dispatch '/login'
-            return
 
           # Home content:
           base = $ 'body'
           base.empty()
 
-          # Top menu: profile, logout
-          append_view base, 'top'
-          append_view base, 'menu'
-          # append_view base, 'logout'
-          append_view base, 'welcome_text'
-          append_view base, 'twitter_feeds'
+          in_context (the) ->
+            base.append the.view 'top'
+            base.append the.view 'menu'
+            base.append the.view 'welcome_text'
+            base.append the.view 'twitter_feeds'
 
-          # Top content: questions (feedback)
-          # List all current questions found in shared database, hide questions user already answered,
-          append_view base, 'questions'
+            # Top content: questions (feedback)
+            # List all current questions found in shared database, hide questions user already answered,
+            base.append the.view 'questions'
 
-          # List bookshelves:
-          # - my new books (recently purchased, currently reading)
-          # - wishlist(s)
-          # - recently suggested books (esp. ones pending reviews)
-          append_view base, 'shelves'
+            # List bookshelves:
+            # - my new books (recently purchased, currently reading)
+            # - wishlist(s)
+            # - recently suggested books (esp. ones pending reviews)
+            base.append the.view 'shelves'
 
-          append_view base, 'shared_content'
+      @get '/reading_club', ->
+        check_session ->
 
-          # Content suggestion: books (by title, author), URLs
-          append_view base, 'content_submission'
+          base = $ 'body'
+          base.empty()
 
-      @get '/profile', ->
+          in_context (the) ->
+            base.append the.view 'top'
+            base.append the.view 'menu'
+
+            base.append the.view 'shared_content'
+
+            # Content suggestion: books (by title, author), URLs
+            base.append the.view 'content_submission'
+
+      @get '/my_account', ->
         check_session ->
           base = $ 'body'
           base.empty()
 
-          # Currently only profile options are: publish_profile, pseudonym, picture, publish_picture flag, description ('about me")
-          # Note: the publish_picture flag is a private flag, when changed it adds or removes the picture attachment from the public profile.
-          # Note: the public_profile flag is a private flag, when changed it adds or remove the profile from the shared db.
-          append_view base, 'top'
-          append_view base, 'menu'
-          append_view base, 'profile'
-          # append_view base, 'logout'
+          in_context (the) ->
+            # Currently only profile options are: publish_profile, pseudonym, picture, publish_picture flag, description ('about me")
+            # Note: the publish_picture flag is a private flag, when changed it adds or removes the picture attachment from the public profile.
+            # Note: the public_profile flag is a private flag, when changed it adds or remove the profile from the shared db.
+            base.append the.view 'top'
+            base.append the.view 'menu'
+            base.append the.view 'profile'
 
       @get '/content/:id', ->
         # Display content:
@@ -242,18 +259,18 @@ Facebook callback bug workaround
       @get '/login', ->
         # Login with email/password, facebook connect, or twitter connect
 
-        check_session ->
+        get_session ->
           if session.user?
             router.dispatch '/home'
             return
 
           base = $ 'body'
           base.empty()
-          append_view base, 'top'
-          append_view base, 'welcome_text'
-          append_view base, 'register'
-          append_view base, 'login'
-          append_view base, 'login_or_register'
+          base.append the.view 'top'
+          base.append the.view 'welcome_text'
+          base.append the.view 'register'
+          base.append the.view 'login'
+          base.append the.view 'login_or_register'
           return
 
       @get '/logout', ->
