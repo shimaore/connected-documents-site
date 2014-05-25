@@ -226,7 +226,7 @@ Hash-tag based routing
             base.append the.view 'shared_content'
 
             # Content suggestion: books (by title, author), URLs
-            base.append the.view 'content_submission'
+            base.append views.toggle_wrapper the, 'content_submission', the.view 'content_submission'
 
       @get '/my_account', ->
         check_session ->

@@ -772,6 +772,23 @@ Form submission for internal users.
 
         console.log "View register is ready"
 
+Wrappers
+========
+
+      toggle_wrapper: (the,name,widget) ->
+        w = $ render ->
+          div ->
+            span '.toggle', ->
+              i '.fa.fa-plus-circle'
+              text texts[name][the.user.language]
+
+        w.append widget
+        widget.hide()
+        w.on 'click', '.toggle', ->
+          widget.toggle()
+
+        w
+
 Toolbox
 =======
 
