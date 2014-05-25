@@ -36,6 +36,15 @@ The functions are called with:
       menu:
         fr: 'Menu'
         en: 'Menu'
+      home:
+        fr: 'Accueil'
+        en: 'Main'
+      my_account:
+        fr: 'Mon compte'
+        en: 'My account'
+      reading_club:
+        fr: 'Club de lecture'
+        en: 'Reading club'
       profile:
         fr: 'Profil'
         en: 'Profile'
@@ -57,6 +66,9 @@ The functions are called with:
       logout:
         fr: 'Déconnexion'
         en: 'Log out'
+      content_submission:
+        fr: 'Suggérer des lectures'
+        en: 'Suggest readings'
       submit_done:
         fr: "Fini"
         en: "Done"
@@ -173,13 +185,9 @@ Menu
 
       menu: (the) ->
         the.widget.html render ->
-          div '.dropdown', ->
-            a '.dropdown-toggle', 'data-toggle':'dropdown', href:'#', texts.menu[the.user.language]
-            ul class:'dropdown-menu', role:'menu', ->
-              li role:'presentation', ->
-                a href:'#/profile', role:'menuitem', texts.profile[the.user.language]
-              li role:'presentation', ->
-                a href:'#/logout', role:'menuitem', texts.logout[the.user.language]
+          div '.menu .btn-group-vertical', ->
+            for name in 'home,my_account,reading_club,logout'.split ','
+              a '.btn.btn-default', href:"#/#{name}", texts[name][the.user.language]
 
         ($ '.dropdown-toggle').dropdown()
 
