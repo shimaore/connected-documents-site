@@ -266,11 +266,13 @@ Facebook callback bug workaround
 
           base = $ 'body'
           base.empty()
-          base.append the.view 'top'
-          base.append the.view 'welcome_text'
-          base.append the.view 'register'
-          base.append the.view 'login'
-          base.append the.view 'login_or_register'
+
+          in_context (the) ->
+            base.append the.view 'top'
+            base.append the.view 'welcome_text'
+            base.append the.view 'register'
+            base.append the.view 'login'
+            base.append the.view 'login_or_register'
           return
 
       @get '/logout', ->

@@ -163,7 +163,10 @@ Top (logo)
       top: (the) ->
         the.widget.html render ->
           a href:'#/', ->
-            img ".logo.#{if the.user? then 'logged-in' else 'logged-out'}", src:"logo-#{the.user.language}.png"
+            img ".logo.#{if the.session.user? then 'logged-in' else 'logged-out'}", src:"logo-#{the.user.language}.png"
+
+        if the.session.user?
+          the.widget.addClass 'col-md-5'
 
 Menu
 ====
@@ -661,7 +664,8 @@ Shows the login prompt and options to login using Facebook and Twitter.
                   value:texts.login_submit[the.user.language]
                 div '.notification'
 
-        $ 'section.login'
+        the.widget
+          .find 'section.login'
           .hide()
 
 Form submission for internal users.
@@ -733,7 +737,8 @@ Register widget
                   value:texts.register_submit[the.user.language]
                 div '.notification'
 
-        $ 'section.register'
+        the.widget
+          .find 'section.register'
           .hide()
 
 Form submission for internal users.
@@ -770,4 +775,4 @@ Form submission for internal users.
 Toolbox
 =======
 
-    {render,input,button,textarea,section,label,i,img,form,select,option,span,div,a,script,raw,ul,li} = require 'teacup'
+    {render,input,button,textarea,section,label,i,img,form,select,option,span,div,a,script,raw,text,ul,li} = require 'teacup'
