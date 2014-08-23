@@ -9,12 +9,11 @@
       'index.html test/index.html text/html'
       'index.css  test/index.css text/css'
       'site.js    test/site.js   application/javascript'
-      'css/bootstrap.min.css       ../frifri-bootstrap/dist/css/bootstrap.min.css text/css'
-      'css/bootstrap-theme.min.css ../frifri-bootstrap/dist/css/bootstrap-theme.min.css text/css'
+      'css/bootstrap.min.css       ../connected-documents-bootstrap/dist/css/bootstrap.min.css text/css'
+      'css/bootstrap-theme.min.css ../connected-documents-bootstrap/dist/css/bootstrap-theme.min.css text/css'
       # 'fonts/glyphicons-halflings-regular.eot'
       # 'fonts/glyphicons-halflings-regular.ttf'
       # 'fonts/glyphicons-halflings-regular.woff'
-      #'js/bootstrap.min.js         ../frifri-bootstrap/dist/js/bootstrap.min.js application/javascript'
     ].map (x) ->
       [name,src,type] = x.split /\s+/
       {name,src,type}
